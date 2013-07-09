@@ -39,6 +39,13 @@ deb-src http://repo.percona.com/apt squeeze main
 deb http://nginx.org/packages/debian/ squeeze nginx
 deb-src http://nginx.org/packages/debian/ squeeze nginx
 
-# php 5.4
-deb http://packages.dotdeb.org squeeze-php54 all
-deb-src http://packages.dotdeb.org squeeze-php54 all
+## php 5.4
+#deb http://packages.dotdeb.org squeeze-php54 all
+#deb-src http://packages.dotdeb.org squeeze-php54 all
+
+# php 5.5
+deb http://packages.dotdeb.org wheezy-php55 all
+deb-src http://packages.dotdeb.org wheezy-php55 all
+
+deb http://www.rabbitmq.com/debian/ testing main
+
