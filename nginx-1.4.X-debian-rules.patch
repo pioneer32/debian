@@ -1,84 +1,84 @@
-*** rules.orig  2013-08-12 15:39:20.878544510 +0400
---- rules.new   2013-08-12 15:41:26.086015656 +0400
+*** rules.orig                2013-08-12 15:39:20.878544510 +0400
+--- rules.new	2013-08-12 15:41:26.086015656 +0400
 ***************
 *** 37,57 ****
-                --with-http_realip_module \
-                --with-http_addition_module \
-                --with-http_sub_module \
--               --with-http_dav_module \
--               --with-http_flv_module \
--               --with-http_mp4_module \
-                --with-http_gunzip_module \
-                --with-http_gzip_static_module \
--               --with-http_random_index_module \
-                --with-http_secure_link_module \
-                --with-http_stub_status_module \
--               --with-mail \
--               --with-mail_ssl_module \
-                --with-file-aio \
-                $(WITH_SPDY) \
-                --with-cc-opt="$(CFLAGS)" \
-                --with-ld-opt="$(LDFLAGS)" \
-!               --with-ipv6
-        dh_auto_build
-
+  		--with-http_realip_module \
+  		--with-http_addition_module \
+  		--with-http_sub_module \
+- 		--with-http_dav_module \
+- 		--with-http_flv_module \
+- 		--with-http_mp4_module \
+  		--with-http_gunzip_module \
+  		--with-http_gzip_static_module \
+- 		--with-http_random_index_module \
+  		--with-http_secure_link_module \
+  		--with-http_stub_status_module \
+- 		--with-mail \
+- 		--with-mail_ssl_module \
+  		--with-file-aio \
+  		$(WITH_SPDY) \
+  		--with-cc-opt="$(CFLAGS)" \
+  		--with-ld-opt="$(LDFLAGS)" \
+! 		--with-ipv6
+  	dh_auto_build
+  
   configure_debug:
 --- 37,52 ----
-                --with-http_realip_module \
-                --with-http_addition_module \
-                --with-http_sub_module \
-                --with-http_gunzip_module \
-                --with-http_gzip_static_module \
-                --with-http_secure_link_module \
-                --with-http_stub_status_module \
-                --with-file-aio \
-                $(WITH_SPDY) \
-                --with-cc-opt="$(CFLAGS)" \
-                --with-ld-opt="$(LDFLAGS)" \
+  		--with-http_realip_module \
+  		--with-http_addition_module \
+  		--with-http_sub_module \
+  		--with-http_gunzip_module \
+  		--with-http_gzip_static_module \
+  		--with-http_secure_link_module \
+  		--with-http_stub_status_module \
+  		--with-file-aio \
+  		$(WITH_SPDY) \
+  		--with-cc-opt="$(CFLAGS)" \
+  		--with-ld-opt="$(LDFLAGS)" \
 !                 --add-module=/tmp/nginx-modules/ngx_http_redis-0.3.6 \
 !                 --add-module=/tmp/nginx-modules/nginx_upload_module-2.2.0
-        dh_auto_build
-
+  	dh_auto_build
+  
   configure_debug:
 ***************
 *** 74,95 ****
-                --with-http_realip_module \
-                --with-http_addition_module \
-                --with-http_sub_module \
--               --with-http_dav_module \
--               --with-http_flv_module \
--               --with-http_mp4_module \
-                --with-http_gunzip_module \
-                --with-http_gzip_static_module \
--               --with-http_random_index_module \
-                --with-http_secure_link_module \
-                --with-http_stub_status_module \
--               --with-mail \
--               --with-mail_ssl_module \
-                --with-file-aio \
-                $(WITH_SPDY) \
-                --with-cc-opt="$(CFLAGS)" \
-                --with-ld-opt="$(LDFLAGS)" \
-!               --with-ipv6 \
-!               --with-debug
-
+  		--with-http_realip_module \
+  		--with-http_addition_module \
+  		--with-http_sub_module \
+- 		--with-http_dav_module \
+- 		--with-http_flv_module \
+- 		--with-http_mp4_module \
+  		--with-http_gunzip_module \
+  		--with-http_gzip_static_module \
+- 		--with-http_random_index_module \
+  		--with-http_secure_link_module \
+  		--with-http_stub_status_module \
+- 		--with-mail \
+- 		--with-mail_ssl_module \
+  		--with-file-aio \
+  		$(WITH_SPDY) \
+  		--with-cc-opt="$(CFLAGS)" \
+  		--with-ld-opt="$(LDFLAGS)" \
+! 		--with-ipv6 \
+! 		--with-debug
+  
   override_dh_auto_install:
-        dh_auto_install
+  	dh_auto_install
 --- 69,85 ----
-                --with-http_realip_module \
-                --with-http_addition_module \
-                --with-http_sub_module \
-                --with-http_gunzip_module \
-                --with-http_gzip_static_module \
-                --with-http_secure_link_module \
-                --with-http_stub_status_module \
-                --with-file-aio \
-                $(WITH_SPDY) \
-                --with-cc-opt="$(CFLAGS)" \
-                --with-ld-opt="$(LDFLAGS)" \
-!               --with-debug \
+  		--with-http_realip_module \
+  		--with-http_addition_module \
+  		--with-http_sub_module \
+  		--with-http_gunzip_module \
+  		--with-http_gzip_static_module \
+  		--with-http_secure_link_module \
+  		--with-http_stub_status_module \
+  		--with-file-aio \
+  		$(WITH_SPDY) \
+  		--with-cc-opt="$(CFLAGS)" \
+  		--with-ld-opt="$(LDFLAGS)" \
+! 		--with-debug \
 !                 --add-module=/tmp/nginx-modules/ngx_http_redis-0.3.6 \
 !                 --add-module=/tmp/nginx-modules/nginx_upload_module-2.2.0
-
+  
   override_dh_auto_install:
-        dh_auto_install
+  	dh_auto_install
