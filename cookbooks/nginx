@@ -36,3 +36,8 @@ wget -qO- https://raw.github.com/pioneer32/debian/master/nginx.conf > /etc/nginx
 
 # правим конфиг
 nano /etc/nginx/nginx.conf
+
+# для munin
+# тут момент, что для работы munin надо чтобы был ответ stub_status nginx (подробности в https://raw.github.com/pioneer32/debian/master/nginx.conf)
+ln -s /usr/share/munin/plugins/nginx_request /etc/munin/plugins/nginx_request
+ln -s /usr/share/munin/plugins/nginx_status /etc/munin/plugins/nginx_status

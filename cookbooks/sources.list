@@ -28,13 +28,3 @@ deb-src http://security.debian.org/ squeeze/updates main contrib non-free
 
 deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free
 
-## php 5.4
-#deb http://packages.dotdeb.org squeeze-php54 all
-#deb-src http://packages.dotdeb.org squeeze-php54 all
-
-# php 5.5
-deb http://packages.dotdeb.org wheezy-php55 all
-deb-src http://packages.dotdeb.org wheezy-php55 all
-
-
-

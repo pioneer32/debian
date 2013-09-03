@@ -1,0 +1,24 @@
+echo -e "# php 5.4\ndeb http://packages.dotdeb.org squeeze-php54 all\ndeb-src http://packages.dotdeb.org squeeze-php54 all" > /etc/apt/sources.list.d/php54.sources.list 
+apt-get update && apt-get dist-upgrade
+apt-get install php5 php5-fpm php5-cli
+
+# можно так, а можно руками написать >>>
+wget -qO- https://raw.github.com/pioneer32/debian/master/php-fpm.conf > /etc/php5/fpm/php-fpm.conf
+mkdir -p /var/log/php
+
+# правим конфиг >>>
+nano /etc/php5/fpm/php.ini
+
+apt-get install php5-dev
+service php5-fpm restart
+
+# если нужен zendopcacher из 5.5 >>>
+cd /tmp
+git clone https://github.com/zendtech/ZendOptimizerPlus.git
+cd ZendOptimizerPlus
+phpize
+./configure --with-php-config=/usr/bin/php-config5
+make && make install
+echo -e "zend_extension=/usr/lib/php5/20100525+lfs/opcache.so\nopcache.memory_consumption=128\nopcache.interned_strings_buffer=8\nopcache.max_accelerated_files=4000\nopcache.revalidate_freq=60\nopcache.fast_shutdown=1\nopcache.enable_cli=1" > /etc/php5/conf.d/zendopcache.ini
+# проверил php -m
+service php5-fpm restart

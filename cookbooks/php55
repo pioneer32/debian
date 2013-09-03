@@ -1,0 +1,13 @@
+echo -e "# php 5.5\ndeb http://packages.dotdeb.org wheezy-php55 all\ndeb-src http://packages.dotdeb.org wheezy-php55 all" > /etc/apt/sources.list.d/php55.sources.list
+apt-get update && apt-get dist-upgrade
+apt-get install php5 php5-fpm php5-cli
+
+# можно так, а можно руками написать >>>
+wget -qO- https://raw.github.com/pioneer32/debian/master/php-fpm.conf > /etc/php5/fpm/php-fpm.conf
+mkdir -p /var/log/php
+
+# правим конфиг >>>
+nano /etc/php5/fpm/php.ini
+
+apt-get install php5-dev
+service php5-fpm restart
