@@ -2,17 +2,32 @@
 # для mysql 5.5 надо ставить ручками, в 5.6 ставить бессмысленно, т.к. там есть родной плагин memcached
 
 # для 5.5 >>>
+
+# есть родной метод >>>
+apt-get install handlersocket-mysql-5.5
+
+# а есть способ получить более позднюю версию >>
 cd /tmp
-git clone https://github.com/DeNA/HandlerSocket-Plugin-for-MySQL.git
-cd HandlerSocket-Plugin-for-MySQL
+
+apt-get install mysql-server dpatch libmysqld-dev
+apt-get source mysql-server
+cd ./mysql-5.5-5.5.31+dfsg
+dpatch apply-all
+mv ./VERSION ./VERSION.orig
+echo "[MySQL Server], `mysql_config --version`" > ./configure.in
+
+cd ..
+git clone https://github.com/DeNA/HandlerSocket-Plugin-for-MySQL.git && cd HandlerSocket-Plugin-for-MySQL
 ./autogen.sh
 
 # --with-mysql-source refers to the top of MySQL source directory (which contains the VERSION file or the configure.in file)
 # --with-mysql-bindir refers to where MySQL binary executables (i.e. mysql_config) are located
 # --with-mysql-plugindir refers to a plugin directory where plugin libraries (*.so) are installed. 
-./configure --with-mysql-source=/work/mysql-5.1.50 --with-mysql-bindir=/work/mysql-5.1.50-linux-x86_64-glibc23/bin  --with-mysql-plugindir=/work/mysql-5.1.50-linux-x86_64-glibc23/lib/plugin
-
+./configure --with-mysql-source=/tmp/mysql-5.5-5.5.31+dfsg --with-mysql-bindir=/usr/bin --with-mysql-plugindir=/usr/lib/mysql/plugin
+# ищем grep -R DMY_PTHREAD_FASTMUTEX ./* и удаляем -DMY_PTHREAD_FASTMUTEX=1
 make && make install
+
+
 
 # для всех >>>
 echo -e "[mysqld]\nloose_handlersocket_port = 9998\n# the port number to bind to (for read requests)\nloose_handlersocket_port_wr = 9999\n\
