@@ -1,3 +1,38 @@
 echo -e "# official nginx repo\ndeb http://nginx.org/packages/debian/ squeeze nginx\ndeb-src http://nginx.org/packages/debian/ squeeze nginx" > /etc/apt/sources.list.d/nginx.sources.list
 wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
 apt-get update && apt-get dist-upgrade
+
+cd /tmp && apt-get source nginx && apt-get build-dep nginx
+
+# если нужны какие-то модули >>>
+mkdir ./nginx-modules
+# там в патче добавленны все модули которые я часто использую и удалены те которые мне редко нужны, если что то надо править ручками
+# TODO в перспективе "разбомбить" на отдельнгые патчи
+wget https://raw.github.com/pioneer32/debian/master/nginx-1.4.X-debian-rules.patch
+patch ./nginx-1.4.*/debian/rules < ./nginx-1.4.X-debian-rules.patch
+# и если надо дебаг то еще добавим --with-debug в ./nginx-1.4.*/debian/rules
+
+# если нужен модуль ngx_http_redis >>>
+wget http://people.freebsd.org/~osa/ngx_http_redis-0.3.6.tar.gz
+tar vfx ./ngx_http_redis-0.3.6.tar.gz -C ./nginx-modules/
+
+# если нужен модуль nginx_upload_module >>>
+wget http://www.grid.net.ru/nginx/download/nginx_upload_module-2.2.0.tar.gz
+tar xvf ./nginx_upload_module-2.2.0.tar.gz -C ./nginx-modules/
+wget https://raw.github.com/pioneer32/debian/master/nginx-1.3.9_upload_module.patch
+patch ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c < ./nginx-1.3.9_upload_module.patch
+
+cd ./nginx-1.4.*
+dpkg-buildpackage -rfakeroot
+
+# задрали версии менять... смотрим как называется ls -la ../nginx*.deb
+dpkg -i ../nginx_1.4.2-1~squeeze_amd64.deb
+
+# проверил nginx -V
+echo 'nginx hold' | dpkg --set-selections && echo 'nginx-debug hold' | dpkg --set-selections
+
+# если нужно
+wget -qO- https://raw.github.com/pioneer32/debian/master/nginx.conf > /etc/nginx/nginx.conf
+
+# правим конфиг
+nano /etc/nginx/nginx.conf
