@@ -1,0 +1,35 @@
+поставил debian
+настроил сеть и sshd
+убираю ненужное:
+если не буду юзать nsf, то надо удалить ее полностью update-rc.d -f portmap disable # или update-rc.d -f rpcbind disable смотря что есть
+если не буду юзать nsf, то update-rc.d -f nfs-common disable
+если не буду юзать nsf, то apt-get --purge remove portmap rpcbind tasksel tasksel-data
+иначе apt-get --purge remove tasksel tasksel-data
+apt-get autoremove
+echo -e "alias grep='grep --color=auto'\nalias ls='ls --color=auto'\n" >> ~/.bashrc
+echo -e "order hosts,bind\n" >> /etc/host.conf 
+echo 'GRUB_CMDLINE_LINUX="ipv6.disable=1"' >> /etc/default/grub
+update-grub
+если все ок, то reboot
+
+wget -qO- https://raw.github.com/pioneer32/debian/master/sources.list > /etc/apt/sources.list
+
+echo -e "# dotdeb repo\ndeb http://packages.dotdeb.org squeeze all\ndeb-src http://packages.dotdeb.org squeeze all" > /etc/apt/sources.list.d/dotdeb.sources.list
+wget http://www.dotdeb.org/dotdeb.gpg && cat dotdeb.gpg | apt-key add -
+
+apt-get update && apt-get dist-upgrade
+
+apt-get install firmware-linux-nonfree
+
+для железа с реалтековской сетвувухой
+apt-get install firmware-realtek 
+
+aptitude search linux-image
+apt-get install -t squeeze-backports linux-image-3.2.0-0.bpo.4-amd64
+проверил nano /boot/grub/grub.cfg
+reboot
+dpkg-reconfigure tzdata
+apt-get install ntp ntpdate
+ntpdate -bs ru.pool.ntp.org
+проверил ps aux | grep ntp
+проверил date

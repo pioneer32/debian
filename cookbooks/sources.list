@@ -26,18 +26,7 @@ deb-src http://ftp.debian.org/debian/ squeeze-updates main contrib non-free
 deb http://security.debian.org/ squeeze/updates main contrib non-free
 deb-src http://security.debian.org/ squeeze/updates main contrib non-free
 
-deb http://packages.dotdeb.org squeeze all
-deb-src http://packages.dotdeb.org squeeze all
-
 deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free
-
-# percona repo
-deb http://repo.percona.com/apt squeeze main
-deb-src http://repo.percona.com/apt squeeze main
-
-# official nginx repo
-deb http://nginx.org/packages/debian/ squeeze nginx
-deb-src http://nginx.org/packages/debian/ squeeze nginx
 
 ## php 5.4
 #deb http://packages.dotdeb.org squeeze-php54 all
@@ -47,5 +36,5 @@ deb-src http://nginx.org/packages/debian/ squeeze nginx
 deb http://packages.dotdeb.org wheezy-php55 all
 deb-src http://packages.dotdeb.org wheezy-php55 all
 
-deb http://www.rabbitmq.com/debian/ testing main
+
 
