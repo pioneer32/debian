@@ -1,0 +1,133 @@
+# тут список репозитариев
+/etc/apt/sources.list
+
+# тут списко приоритетов (Pin-Priority)
+/etc/apt/preferences
+
+# тут лежат deb файлы установленных пакетов
+/var/cache/apt/archives
+
+# сравнение следующих файлов дает информацию о том, что же произошло в последний сеанс установки
+/var/lib/dpkg/status
+/var/backups/dpkg.status* 
+
+# скачать и обновить список пакетов
+aptitude update
+
+# обновить кэш и проверить его на предмет сломанных пакетов
+apt-get check
+
+# получения списка пакетов, установленных в системе
+dpkg -l
+dpkg-query -l
+
+# получения списка пакетов, установленных в системе по маске
+dpkg -l base*
+dpkg-query -l base*
+
+# поиск пакета по текстовому образцу (своеобразный аналог dpkg -l ... но ищет и среди неустановленных пакетов)
+apt-cache search packagename*
+
+# установить единичный пакет:
+dpkg -i packagename.deb
+# либо для нескольких пакетов разом (удобно для когда есть зависимости):
+dpkg -i packagename1.deb ... packagename#.deb
+
+# установить пакет включая зависимости
+apt-get install packagename
+
+# установить пакет включая зависимости, не принимать во внимание сломанные зависимости
+apt-get install -f packagename
+
+# сломанные зависимости или исправляем, или поступаем таким образом:
+dpkg --ignore-depends=packagename1,... -i packagename.deb
+dpkg --force-depends -i packagename.deb
+dpkg --force-depends --purge packagename
+dpkg --force-confmiss -i packagename.deb # Установка отсутствующих conf-файлов
+
+# установка пакета в систему, которая не загружается, после загрузки с live-cd, root системы примонтирова на /target 
+dpkg --root /target -i packagename.deb
+
+# поиск неполностью установленных пакетов
+dpkg  -C
+
+# удалит пакет, но сохранит настроечные его файлы
+dpkg -r packagename
+apt-get remove packagename
+
+# полную очистку системы от всех компонентов пакета (кроме конфигурационных файлов в домашнем каталоге пользователя - от них в любом случае придется избавляться вручную)
+dpkg -P packagename
+apt-get remove --purge packagename
+
+# узнать каким пакетом установлен файл
+dpkg -S файл
+dpkg-query -S файл
+
+# вывод детального статуса пакета
+dpkg -s packagename
+dpkg-query -s packagename
+
+# вывод детального статуса, включающее сведения о том, установлен ли пакет, нуждается ли он в обновлении, нет ли ошибок в его настройке, и так далее;
+dpkg -l packagename
+dpkg-query -l packagename
+
+# просто вывод номера версии пакета
+dpkg-query -W packagename
+
+# вывести полный список файлов, относящихся к данному пакету
+dpkg -L packagename
+dpkg-query -L packagename
+
+# выполнение настройки, уже установленного, пакета
+dpkg-reconfigure packagename
+
+# выполнение настройки, для всех установленных пакетов
+dpkg-reconfigure -a
+
+# для удержание пакетов от обновления при работе с командами dselect и apt-get -u upgrade package может быть выполнено так
+# !!! игнорируется при apt-get -u install packagename
+echo -e "packagename1 hold\npackagename2 hold" | dpkg --set-selections
+
+# посмотреть список всех удержанных от обновления пакетов 
+dpkg --get-selections | grep -e "hold$"
+
+#чтобы удержать пакет от обновления путем автоматического отката в командах apt-get -u upgrade пакет или apt-get -u dist-upgrade
+# надо дописать в /etc/apt/preferences:
+Package: packagename
+Pin: release a=stable
+Pin-Priority: 2000
+
+
+
+# если команда dpkg не работает
+# смотрим что есть http://http.us.debian.org/debian/pool/main/d/dpkg/
+# ... скачиваем пакет dpkg_версия_архитектура.deb
+ar x dpkg_версия_архитектура.deb
+mv data.tar.gz /data.tar.gz
+cd /
+tar xzfv data.tar.gz
+
+# настроить локали
+dpkg-reconfigure locales
+
+# информация по пакету priority/dists
+apt-cache policy packagename
+
+# показать описание пакета во всех дистрибутивах (зависимости и т.п.)
+apt-cache show -a packagename
+
+# показать описание пакетов с исходным текстом
+apt-cache showsrc packagename
+
+# отладочная информация по пакету
+apt-cache showpkg packagename
+
+# удаляет только неиспользованные файлы пакетов
+apt-get autoclean
+
+# удаляет все файлы из кэша
+apt-get clean
+
+# просмотреть список доступных вам к установке версий пакета можно командой:
+apt-cache policy packagename
+

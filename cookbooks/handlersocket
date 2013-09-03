@@ -1,0 +1,37 @@
+# для percona/maria форков mysql ставить не надо, он уже входит в поставку
+# для mysql 5.5 надо ставить ручками, в 5.6 ставить бессмысленно, т.к. там есть родной плагин memcached
+
+# для 5.5 >>>
+cd /tmp
+git clone https://github.com/DeNA/HandlerSocket-Plugin-for-MySQL.git
+cd HandlerSocket-Plugin-for-MySQL
+./autogen.sh
+
+# --with-mysql-source refers to the top of MySQL source directory (which contains the VERSION file or the configure.in file)
+# --with-mysql-bindir refers to where MySQL binary executables (i.e. mysql_config) are located
+# --with-mysql-plugindir refers to a plugin directory where plugin libraries (*.so) are installed. 
+./configure --with-mysql-source=/work/mysql-5.1.50 --with-mysql-bindir=/work/mysql-5.1.50-linux-x86_64-glibc23/bin  --with-mysql-plugindir=/work/mysql-5.1.50-linux-x86_64-glibc23/lib/plugin
+
+make && make install
+
+# для всех >>>
+echo -e "[mysqld]\nloose_handlersocket_port = 9998\n# the port number to bind to (for read requests)\nloose_handlersocket_port_wr = 9999\n\
+# the port number to bind to (for write requests)\nloose_handlersocket_threads = 16\n# the number of worker threads (for read requests)\nloose_handlersocket_threads_wr = 1\n\
+# the number of worker threads (for write requests)\nopen_files_limit = 65535\n# to allow handlersocket accept many concurrent\n# connections, make \
+open_files_limit as large as\n# possible." >> /etc/mysql/my.cnf
+mysql -e "install plugin handlersocket soname 'handlersocket.so';show plugins;"
+# проверяем
+mysql -e "show processlist;"
+
+# клиент для php
+# есть еще альтернатива https://github.com/piteer1/php-handlersocket
+cd /tmp
+wget http://php-handlersocket.googlecode.com/files/php-handlersocket-0.3.1.tar.gz
+tar xfv ./php-handlersocket-0.3.1.tar.gz
+cd handlersocket
+phpize
+./configure --disable-handlersocket-hsclient
+make && make install
+echo "extension=handlersocket.so" > /etc/php5/mods-available/handlersocket.ini && echo /etc/php5/{cli/,fpm/}conf.d/20-handlersocket.ini | xargs -n1 ln -sf /etc/php5/mods-available/handlersocket.ini $1
+# проверил php -m
+service php5-fpm restart

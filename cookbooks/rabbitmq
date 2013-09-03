@@ -1,3 +1,47 @@
 echo -e "# official rabbitmq repo\ndeb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.sources.list
 wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc && apt-key add rabbitmq-signing-key-public.asc
 apt-get update && apt-get dist-upgrade
+apt-get install rabbitmq-server
+cd /tmp
+
+# вариант 0 (не рабочий пока, не поправят pecl amqp)
+git clone https://github.com/alanxz/rabbitmq-c.git
+cd rabbitmq-c
+git submodule init
+git submodule update
+apt-get install pkg-config
+autoreconf -i
+./configure
+make && make install
+
+# вариант I
+apt-get install cmake
+wget https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-v0.3.0.zip
+unzip ./rabbitmq-c-v0.3.0.zip
+mkdir build
+cd build
+cmake ..
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . --target install
+
+# вариант II
+wget https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-v0.3.0.zip
+unzip ./rabbitmq-c-v0.3.0.zip
+cd rabbitmq-c-rabbitmq-c-v0.3.0
+autoreconf -i
+./configure && make && make install
+
+# настрока vhost-а, пользователя и прав
+rabbitmqctl add_vhost /bn
+rabbitmqctl list_vhosts
+rabbitmqctl add_user bn-rmq-user 87J71913
+rabbitmqctl set_permissions -p /bn bn-rmq-user ".*" ".*" ".*"
+
+# полностью сбросить рабит >>>
+rabbitmqctl stop_app && rabbitmqctl reset && rabbitmqctl start_app
+
+# клиент для php >>>
+pecl install amqp
+echo -e "extension=amqp.so\n" > /etc/php5/conf.d/amqp.ini
+# проверим php -m
+service php5-fpm restart

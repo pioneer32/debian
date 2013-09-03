@@ -9,5 +9,5 @@ mkdir -p /var/log/php
 # правим конфиг >>>
 nano /etc/php5/fpm/php.ini
 
-apt-get install php5-dev
+apt-get install php-pear php5-dev
 service php5-fpm restart

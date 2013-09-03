@@ -9,7 +9,7 @@ mkdir -p /var/log/php
 # правим конфиг >>>
 nano /etc/php5/fpm/php.ini
 
-apt-get install php5-dev
+apt-get install php5-dev php-pear
 service php5-fpm restart
 
 # если нужен zendopcacher из 5.5 >>>

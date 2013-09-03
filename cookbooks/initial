@@ -30,6 +30,10 @@ aptitude search linux-image
 apt-get install -t squeeze-backports linux-image-3.2.0-0.bpo.4-amd64
 # проверил nano /boot/grub/grub.cfg
 reboot
+
+# настроить локали
+dpkg-reconfigure locales
+
 dpkg-reconfigure tzdata
 apt-get install ntp ntpdate
 ntpdate -bs ru.pool.ntp.org
