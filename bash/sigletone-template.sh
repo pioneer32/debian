@@ -7,7 +7,7 @@ LOGFILE=/var/log/${SCRIPTNAME}.log
 # check for dublicate run
 if [ -f "${PIDFILE}" ]; then
         pid=`cat "${PIDFILE}"`
-        if [ ! `ps -eo pid | grep -v grep | grep -c "${pid}"` -eq 0 ]; then
+        if [ ! `ps -eo pid | grep -v grep | grep -c -P "^\\s*${pid}$"` -eq 0 ]; then
                 echo "`date +'%Y-%m-%d %H:%M:%S'` Dublicate run" >> "${LOGFILE}";
                 exit 0;
         fi
