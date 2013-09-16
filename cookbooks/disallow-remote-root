@@ -1,0 +1,5 @@
+sed -i 's/^#[ \\t]*\(auth[ \\t]*required[ \\t]*pam_wheel.so\)$/\1/g' /etc/pam.d/su
+groupadd wheel
+usermod -G wheel *USERNAME*
+sed -i 's/^[ \\t]*\(Port[ \\t]*\)22[ \\t]*$/\12200/g' /etc/ssh/sshd_config && sed -i 's/^[ \\t]*\(PermitRootLogin[ \\t]*\)yes/\1no/g' /etc/ssh/sshd_config
+service ssh restart
