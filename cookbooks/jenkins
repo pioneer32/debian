@@ -1,0 +1,6 @@
+echo "deb http://pkg.jenkins-ci.org/debian binary/" > /etc/apt/sources.list.d/jenkins.list
+wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
+apt-get update
+apt-get install jenkins
+
+ Далее все в вебе, но напоролся на граблю, никак не хотел в ~jenkins/.ssh класть ключ github-а прилось сгенерить ssh -t rsa без пароля и закинуть его в гитхаб, после этого прокатило
