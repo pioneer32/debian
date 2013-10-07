@@ -8,7 +8,7 @@ cd /tmp && apt-get source nginx && apt-get build-dep nginx
 mkdir ./nginx-modules
 # там в патче добавленны все модули которые я часто использую и удалены те которые мне редко нужны, если что то надо править ручками
 # TODO в перспективе "разбомбить" на отдельнгые патчи
-wget https://raw.github.com/pioneer32/debian/master/nginx-1.4.X-debian-rules.patch
+wget https://raw.github.com/pioneer32/debian/master/nginx/nginx-1.4.X-debian-rules.patch
 patch ./nginx-1.4.*/debian/rules < ./nginx-1.4.X-debian-rules.patch
 # и если надо дебаг то еще добавим --with-debug в ./nginx-1.4.*/debian/rules
 
@@ -19,8 +19,27 @@ tar vfx ./ngx_http_redis-0.3.6.tar.gz -C ./nginx-modules/
 # если нужен модуль nginx_upload_module >>>
 wget http://www.grid.net.ru/nginx/download/nginx_upload_module-2.2.0.tar.gz
 tar xvf ./nginx_upload_module-2.2.0.tar.gz -C ./nginx-modules/
-wget https://raw.github.com/pioneer32/debian/master/nginx-1.3.9_upload_module.patch
+wget https://raw.github.com/pioneer32/debian/master/nginx/nginx-1.3.9_upload_module.patch
 patch ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c < ./nginx-1.3.9_upload_module.patch
+
+# если нужен nginx_http_lua
+apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks
+luarocks install luasocket lua-cjson
+# TODO добавить установку luajit
+ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
+wget -O ./ngx_devel_kit_v0.2.19.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz
+tar xvf ./ngx_devel_kit_v0.2.19.tar.gz -C ./nginx-modules/
+wget -O ./lua_nginx_module_v0.9.0.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.0.tar.gz
+tar xvf ./lua_nginx_module_v0.9.0.tar.gz -C ./nginx-modules/
+# если есть luajit
+export LUAJIT_LIB=/path/to/luajit/lib
+export LUAJIT_INC=/path/to/luajit/include/luajit-2.0
+# добавим в ./nginx-1.4.*/debian/rules
+--add-module=/tmp/nginx-modules/ngx_devel_kit-0.2.19 \
+--add-module=/tmp/nginx-modules/lua-nginx-module-0.9.0
+
+
+
 
 cd ./nginx-1.4.*
 dpkg-buildpackage -rfakeroot
