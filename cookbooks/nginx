@@ -23,8 +23,8 @@ wget https://raw.github.com/pioneer32/debian/master/nginx/nginx-1.3.9_upload_mod
 patch ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c < ./nginx-1.3.9_upload_module.patch
 
 # если нужен nginx_http_lua
-apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks
-luarocks install luasocket lua-cjson
+apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
+luarocks install luasocket && luarocks install lua-cjson
 # TODO добавить установку luajit
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 wget -O ./ngx_devel_kit_v0.2.19.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz
@@ -34,12 +34,27 @@ tar xvf ./lua_nginx_module_v0.9.0.tar.gz -C ./nginx-modules/
 # если есть luajit
 export LUAJIT_LIB=/path/to/luajit/lib
 export LUAJIT_INC=/path/to/luajit/include/luajit-2.0
+
+cd ./nginx-modules/ && git clone https://github.com/agentzh/lua-resty-redis.git && cd ..
+
 # добавим в ./nginx-1.4.*/debian/rules
+\
 --add-module=/tmp/nginx-modules/ngx_devel_kit-0.2.19 \
---add-module=/tmp/nginx-modules/lua-nginx-module-0.9.0
+--add-module=/tmp/nginx-modules/lua-nginx-module-0.9.0 \
+--add-module=/tmp/nginx-modules/lua-resty-redis
 
+cd /tmp/nginx-modules/ngx_openresty-1.2.8.6
+./configure --without-http_echo_module --without-http_xss_module --without-http_coolkit_module --without-http_set_misc_module --without-http_encrypted_session_module \
+--without-http_form_input_module --without-http_array_var_module --without-http_auth_request_module --without-http_headers_more_module --without-lua_resty_memcached --without-http_memc_module \
+--without-ngx_devel_kit_module --without-lua_cjson --without-lua_rds_parser --without-lua_redis_parser --without-lua_resty_memcached --without-lua_resty_mysql --without-lua_resty_string \
+--without-lua_resty_upload --without-http_rds_csv_module --without-http_rds_json_module --without-http_redis_module --without-http_redis2_module -j2
+ 
+# --with-luajit --with-lua_resty_redis
 
+# под вопросом LuaRestyMemcachedLibrary LuaRestyMySQLLibrary LuaRestyStringLibrary LuaRedisParserLibrary LuaRestyWebSocketLibrary
+# пара моментов, надо разобраться, вроде как в рести уже входят несколько модулей, которые я собираю отдельно: ngx_devel_kit_module, lua-cjson, HttpLuaModule, HttpRedisModule
 
+make && make install
 
 cd ./nginx-1.4.*
 dpkg-buildpackage -rfakeroot
