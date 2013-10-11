@@ -1,0 +1,23 @@
+# ниже непонятный хлам
+cd ./nginx-modules/ && git clone https://github.com/agentzh/lua-resty-redis.git && cd ..
+
+# добавим в ./nginx-1.4.*/debian/rules
+\
+--add-module=/tmp/nginx-modules/ngx_devel_kit-0.2.19 \
+--add-module=/tmp/nginx-modules/lua-nginx-module-0.9.0 \
+--add-module=/tmp/nginx-modules/lua-resty-redis
+
+cd /tmp/nginx-modules/ngx_openresty-1.2.8.6
+./configure --without-http_echo_module --without-http_xss_module --without-http_coolkit_module --without-http_set_misc_module --without-http_encrypted_session_module \
+--without-http_form_input_module --without-http_array_var_module --without-http_auth_request_module --without-http_headers_more_module --without-lua_resty_memcached --without-http_memc_module \
+--without-ngx_devel_kit_module --without-lua_cjson --without-lua_rds_parser --without-lua_redis_parser --without-lua_resty_memcached --without-lua_resty_mysql --without-lua_resty_string \
+--without-lua_resty_upload --without-http_rds_csv_module --without-http_rds_json_module --without-http_redis_module --without-http_redis2_module -j2
+ 
+# --with-luajit --with-lua_resty_redis
+
+# под вопросом LuaRestyMemcachedLibrary LuaRestyMySQLLibrary LuaRestyStringLibrary LuaRedisParserLibrary LuaRestyWebSocketLibrary
+# пара моментов, надо разобраться, вроде как в рести уже входят несколько модулей, которые я собираю отдельно: ngx_devel_kit_module, lua-cjson, HttpLuaModule, HttpRedisModule
+
+make && make install
+
+
