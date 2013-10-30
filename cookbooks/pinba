@@ -1,0 +1,5 @@
+# для pinba-engine-mysql-* до какого-то времени надо было libprotobuf6, в wheezy его заменили на libprotobuf-lite7
+# если будет сраться на зависимость от libprotobuf6 то надо поставить из oldstable
+apt-get update && apt-get dist-upgrade
+apt-get install php5-pinba
+cd /tmp && apt-get download pinba-engine-mysql-5.5

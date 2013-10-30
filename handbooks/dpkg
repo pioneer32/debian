@@ -39,6 +39,11 @@ apt-get install packagename
 # установить пакет включая зависимости, не принимать во внимание сломанные зависимости
 apt-get install -f packagename
 
+# установить только пакет игнорируя зависимости
+cd /tmp
+apt-get download packagename
+dpkg --force-all -i ./packagename.deb
+
 # сломанные зависимости или исправляем, или поступаем таким образом:
 dpkg --ignore-depends=packagename1,... -i packagename.deb
 dpkg --force-depends -i packagename.deb

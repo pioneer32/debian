@@ -1,30 +1,21 @@
-#
+# wheezy
 
-# deb cdrom:[Debian GNU/Linux 6.0.7 _Squeeze_ - Official amd64 DVD Binary-1 20130223-14:06]/ squeeze contrib main
-
-# deb cdrom:[Debian GNU/Linux 6.0.7 _Squeeze_ - Official amd64 DVD Binary-1 20130223-14:06]/ squeeze contrib main
-
-# Line commented out by installer because it failed to verify:
-#deb http://security.debian.org/ squeeze/updates main contrib
-# Line commented out by installer because it failed to verify:
-#deb-src http://security.debian.org/ squeeze/updates main contrib
-
-# squeeze-updates, previously known as 'volatile'
-# A network mirror was not selected during install.  The following entries
-# are provided as examples, but you should amend them as appropriate
-# for your mirror of choice.
-#
-# deb http://ftp.debian.org/debian/ squeeze-updates main contrib
-# deb-src http://ftp.debian.org/debian/ squeeze-updates main contrib
-
-deb http://ftp.ru.debian.org/debian stable main contrib non-free
-deb-src http://ftp.ru.debian.org/debian stable main contrib non-free
+deb http://ftp.ru.debian.org/debian squeeze main contrib non-free
+deb http://ftp.ru.debian.org/debian wheezy main contrib non-free
+deb-src http://ftp.ru.debian.org/debian squeeze main contrib non-free
+deb-src http://ftp.ru.debian.org/debian wheezy main contrib non-free
 
 deb http://ftp.debian.org/debian/ squeeze-updates main contrib non-free
+deb http://ftp.debian.org/debian/ wheezy-updates main contrib non-free
 deb-src http://ftp.debian.org/debian/ squeeze-updates main contrib non-free
+deb-src http://ftp.debian.org/debian/ wheezy-updates main contrib non-free
 
 deb http://security.debian.org/ squeeze/updates main contrib non-free
+deb http://security.debian.org/ wheezy/updates main contrib non-free
 deb-src http://security.debian.org/ squeeze/updates main contrib non-free
+deb-src http://security.debian.org/ wheezy/updates main contrib non-free
+
+deb http://packages.dotdeb.org wheezy all
+deb-src http://packages.dotdeb.org wheezy all
 
 deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free
-
