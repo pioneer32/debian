@@ -2,4 +2,20 @@
 # если будет сраться на зависимость от libprotobuf6 то надо поставить из oldstable
 apt-get update && apt-get dist-upgrade
 apt-get install php5-pinba
-cd /tmp && apt-get download pinba-engine-mysql-5.5
+
+# для mysql 5.5 (percona 5.6 и т.п.)
+apt-get install pinba-engine-mysql-5.5
+
+# для mysql 5.1 (percona 5.5 и т.п.)
+wget http://pinba.org/files/pinba_engine-0.0.6.tar.gz && tar -xvf ./pinba_engine-0.0.6.tar.gz
+
+wget http://pinba.org/files/pinba_engine-1.0.0.tar.gz && tar -xvf ./pinba_engine-1.0.0.tar.gz
+
+apt-get install libprotobuf-dev protobuf-compiler libjudy-dev libevent-dev build-essential fakeroot dpkg-dev bison
+apt-get source percona-server-server-5.5
+cd ./percona-server-*/BUILD && ./autorun.sh
+cd .. && ./configure
+cd ../pinba_engine-*
+./configure --with-mysql=/tmp/percona-server-5.5-5.5.33-rel31.1 --libdir=/usr/lib/mysql/plugin
+make && make install
+
