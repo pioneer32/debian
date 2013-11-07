@@ -7,15 +7,15 @@ apt-get install php5-pinba
 apt-get install pinba-engine-mysql-5.5
 
 # для mysql 5.1 (percona 5.5 и т.п.)
-wget http://pinba.org/files/pinba_engine-0.0.6.tar.gz && tar -xvf ./pinba_engine-0.0.6.tar.gz
-
+cd /tmp
 wget http://pinba.org/files/pinba_engine-1.0.0.tar.gz && tar -xvf ./pinba_engine-1.0.0.tar.gz
-
 apt-get install libprotobuf-dev protobuf-compiler libjudy-dev libevent-dev build-essential fakeroot dpkg-dev bison
-apt-get source percona-server-server-5.5
-cd ./percona-server-*/BUILD && ./autorun.sh
-cd .. && ./configure
+# сорцы идущие в оф репозитарии и получаемые через apt-get source НЕ ПОДХОДЯТ надо качать напрямую с офсайта
+wget http://www.percona.com/redir/downloads/Percona-Server-5.5/LATEST/release-5.5.34-32.0/591/source/Percona-Server-5.5.34-rel32.0.tar.gz
+tar -xvf ./Percona-Server-5.5.34-rel32.0.tar.gz
+cd ./Percona-Server-5.5.34-rel32.0 && ./BUILD/autorun.sh
+./configure && make
 cd ../pinba_engine-*
-./configure --with-mysql=/tmp/percona-server-5.5-5.5.33-rel31.1 --libdir=/usr/lib/mysql/plugin
+./configure --with-mysql=/tmp/Percona-Server-5.5.34-rel32.0 --libdir=/usr/lib/mysql/plugin
 make && make install
 
