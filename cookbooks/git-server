@@ -3,3 +3,23 @@ apt-get dist-upgrade
 
 apt-get install git-core gitosis
 adduser --system --shell /bin/sh --gecos 'git version control' --group --disabled-password --home /home/git git
+
+su git
+cd && mkdir .ssh
+# на клиенте генерим rsa ключ (в eclipse)
+# закинем ключ
+echo 'ssh-rsa ....' >> ~/.ssh/authorized_keys
+
+# создаем Git репозиторий на сервере
+cd ~
+mkdir myproject.git
+cd myproject.git
+git --bare init
+
+exit
+nano /etc/ssh/sshd_config
+# убедимся что строки в таком состояние: PubkeyAuthentication yes и AuthorizedKeysFile .ssh/authorized_keys
+
+# у пользователя git заменим шел на git-shell
+which git-shell
+nano /etc/passwd
