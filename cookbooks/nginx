@@ -2,7 +2,11 @@ echo -e "# official nginx repo\ndeb http://nginx.org/packages/debian/ wheezy ngi
 wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
 apt-get update && apt-get dist-upgrade
 
+# вариант из packages.dotdeb.org c 30 окт 2013 не работает, там просто пипец... НЕ СОБИРАЕТСЯ, ТАМ ПИЗДЕЦ ПОЛНЫЙ!!!
 cd /tmp && apt-get source nginx && apt-get build-dep nginx
+
+# вариант из nginx.org собирается
+cd /tmp && apt-get source nginx=1.4.3-1~wheezy && apt-get build-dep nginx=1.4.3-1~wheezy
 
 # если нужны какие-то модули >>>
 mkdir ./nginx-modules
@@ -25,23 +29,29 @@ wget -O ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c https
 cd ./nginx-modules && git clone https://github.com/vkholodkov/nginx-upload-module.git && cd ..
 wget -O ./nginx-modules/nginx-upload-module/ngx_http_upload_module.c https://gist.github.com/pioneer32/6930808/raw/f9fd2659a08605346c53f3983f762769b7aedb76/ngx_http_upload_module.c
 
-# если нужен nginx_http_lua
+# если нужен nginx_http_lua (если в составе сорцов из репы дебиана не пришел этот модуль, начиная с 1.4.3-3 он приходит то надо)
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
 luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix
 # TODO добавить установку luajit
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 wget -O ./ngx_devel_kit_v0.2.19.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit_v0.2.19.tar.gz -C ./nginx-modules/
 wget -O ./lua_nginx_module_v0.9.0.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.0.tar.gz && tar xvf ./lua_nginx_module_v0.9.0.tar.gz -C ./nginx-modules/
+
 # если есть luajit >>>
-export LUAJIT_LIB=/path/to/luajit/lib
-export LUAJIT_INC=/path/to/luajit/include/luajit-2.0
+export LUAJIT_LIB=/usr/local/lib
+export LUAJIT_INC=/usr/local/include/luajit-2.0
 
 # тут в конфиг добавляются ВСЕ выше перечисленные модули, а ненужные удаляются
-a=`ls ./nginx-1.4.*/debian/rules` && cp $a "$a.bak" && grep -v -P '(with-http_dav_module|with-http_flv_module|with-http_mp4_module|with-http_random_index_module|with-mail|with-mail_ssl_module)' "$a.bak" > $a && \
+# если нужен дебаг, то лучше его принудительно прописать руками --with-debug
+a=`ls ./nginx-1.4.*/debian/rules` && cp $a "$a.bak" && grep -v -P '(with-http_secure_link_module|with-http_sub_module|with-http_addition_module|with-http_realip_module|with-http_dav_module|with-http_flv_module|with-http_mp4_module|with-http_random_index_module|with-mail|with-mail_ssl_module|nginx-auth-pam|nginx-dav-ext-module|nginx-echo|nginx-syslog|nginx-cache-purge|ngx_http_pinba_module|ngx_http_substitutions_filter_module|nginx-x-rid-header)' "$a.bak" > $a && \
 sed -e 's/^\([ \t]*\)--with-ipv6[ \t]*\\/\1--add-module=\/tmp\/nginx-modules\/ngx_http_redis-0.3.6 \\\n\1--add-module=\/tmp\/nginx-modules\/nginx_upload_module-2.2.0 \\\n\1--add-module=\/tmp\/nginx-modules\/lua-nginx-module-0.9.0 \\/' -i $a && \
-sed -e 's/^\([ \t]*\)--with-ipv6$/\1--add-module=\/tmp\/nginx-modules\/ngx_http_redis-0.3.6 \\\n\1--add-module=\/tmp\/nginx-modules\/nginx_upload_module-2.2.0 \\\n\1--add-module=\/tmp\/nginx-modules\/lua-nginx-module-0.9.0/' -i $a
+sed -e 's/^\([ \t]*\)--with-ipv6$/\1--add-module=\/tmp\/nginx-modules\/ngx_http_redis-0.3.6 \\\n\1--add-module=\/tmp\/nginx-modules\/nginx_upload_module-2.2.0 \\\n\1--add-module=\/tmp\/nginx-modules\/lua-nginx-module-0.9.0/' -i $a && \
+sed -e 's/^\([ \t]*\)dh_shlibdeps -a/\1dpkg-shlibdeps -a --dpkg-shlibdeps-params=--ignore-missing-info/' -i $a &&
+echo -e "override_dh_shlibdeps:\n        dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info\n" >> $a
 
-
+# для luajit, если вывалится по dpkg-shlibdeps: error: no dependency information found for /usr/local/lib/libluajit-5.1.so.2 (used by debian/nginx-full/usr/sbin/nginx)
+# надо строку 'dpkg-shlibdeps -a' заменить на 'dpkg-shlibdeps -a --dpkg-shlibdeps-params=--ignore-missing-info'
+# в авто-патче debian/rules это сделано
 
 cd ./nginx-1.4.* && dpkg-buildpackage -rfakeroot
 
