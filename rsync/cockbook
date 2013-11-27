@@ -1,0 +1,55 @@
+# server - сервер источник
+# mirror — сервер для Бекапа
+
+# на обе машины
+apt-get install rsync
+
+# на server
+adduser rsync-mirrorer --home /home/rsync-mirrorer --shell /bin/sh --gecos "" && su scp-backup -c 'mkdir ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys' && passwd rsync-mirrorer
+
+# проверим
+# на server
+su rsync-mirrorer -c 'echo test > ~/test'
+# на mirror
+mkdir ~/mirror-of-server && rsync -avz -e ssh rsync-mirrorer@server:~/ ~/mirror-of-server/
+# по желанию - проверяем наличие файлов
+rm -rf ~/mirror-of-server
+
+# на mirror, на все вопросы enter
+mkdir /root/rsync && ssh-keygen -t dsa -b 1024 -f /root/rsync/mirror-rsync-key
+scp /root/rsync/mirror-rsync-key.pub rsync-mirrorer@server:/home/rsync-mirrorer/ && ssh rsync-mirrorer@server 'cat ~/mirror-rsync-key.pub >> ~/.ssh/authorized_keys'
+# если порт не стандартный:
+scp -P НОМЕРПОРТА /root/rsync/mirror-rsync-key.pub rsync-mirrorer@server:/home/rsync-mirrorer/ && ssh -p НОМЕРПОРТА rsync-mirrorer@server 'cat ~/mirror-rsync-key.pub >> ~/.ssh/authorized_keys'
+
+# заходим на server от имени rsync-mirrorer
+ssh rsync-mirrorer@server
+# если порт не стандартный:
+ssh -p НОМЕРПОРТА rsync-mirrorer@server
+
+nano ~/.ssh/authorized_keys
+# нужно заменить начало строки:
+# ssh-dss AAAAB3NzaC1kc3MAAA[...]lSUom root@mirror
+# заменить на
+# command="/home/rsync-mirrorer/rsync/checkrsync", from="mirror", no-port-forwarding, no-X11-forwarding, no-pty ssh-dss AAAAB3NzaC1kc3MAAA[...]lSUom root@mirror
+
+mkdir ~/rsync && wget -qO- https://raw.github.com/pioneer32/debian/master/rsync/checkrsync > ~/rsync/checkrsync && chmod 700 ~/rsync/checkrsync
+
+# на mirror (вся репликация будет от рута, мне это не нравится но разбираться пока нет времени)
+mkdir ~/rsync && wget -qO- https://raw.github.com/pioneer32/debian/master/rsync/do-replication > ~/rsync/do-replication && chmod 0700 ~/rsync/do-replication
+# тут надо определиться, какие папки на server, что из них надо исключить, куда на mirror должны "зеркалироваться"
+nano ~/rsync/do-replication
+# правим вначале файла конфиг
+# и проверяем
+~/rsync/do-replication
+
+# если все ок, то назначаем задачу крону /root/rsync/do-replication и мониторим логи
+
+
+
+
+
+
+scp /root/rsync/mirror-rsync-key.pub rsync-mirrorer@92.53.120.237:/home/rsync-mirrorer/ && ssh rsync-mirrorer@92.53.120.237 'cat ~/mirror-rsync-key.pub >> ~/.ssh/authorized_keys'
+
+
+92.53.120.237
