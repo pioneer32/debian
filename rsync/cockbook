@@ -43,13 +43,3 @@ nano ~/rsync/do-replication
 ~/rsync/do-replication
 
 # если все ок, то назначаем задачу крону /root/rsync/do-replication и мониторим логи
-
-
-
-
-
-
-scp /root/rsync/mirror-rsync-key.pub rsync-mirrorer@92.53.120.237:/home/rsync-mirrorer/ && ssh rsync-mirrorer@92.53.120.237 'cat ~/mirror-rsync-key.pub >> ~/.ssh/authorized_keys'
-
-
-92.53.120.237
