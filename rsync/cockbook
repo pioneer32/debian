@@ -35,11 +35,11 @@ nano ~/.ssh/authorized_keys
 mkdir ~/rsync && wget -qO- https://raw.github.com/pioneer32/debian/master/rsync/checkrsync > ~/rsync/checkrsync && chmod 700 ~/rsync/checkrsync
 
 # на mirror (вся репликация будет от рута, мне это не нравится но разбираться пока нет времени)
-mkdir ~/rsync && wget -qO- https://raw.github.com/pioneer32/debian/master/rsync/do-replication > ~/rsync/do-replication && chmod 0700 ~/rsync/do-replication
+mkdir ~/rsync && wget -qO- https://raw.github.com/pioneer32/debian/master/rsync/do-replication.sh > ~/rsync/do-replication.sh && chmod 0700 ~/rsync/do-replication.sh
 # тут надо определиться, какие папки на server, что из них надо исключить, куда на mirror должны "зеркалироваться"
-nano ~/rsync/do-replication
+nano ~/rsync/do-replication.sh
 # правим вначале файла конфиг
 # и проверяем
-~/rsync/do-replication
+~/rsync/do-replication.sh
 
-# если все ок, то назначаем задачу крону /root/rsync/do-replication и мониторим логи
+# если все ок, то назначаем задачу крону /root/rsync/do-replication.sh и мониторим логи
