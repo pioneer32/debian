@@ -1,0 +1,43 @@
+#!/bin/sh
+#prerequisites: php55 percona
+
+# УСТАНОВКА zabbix-server-mysql ИЗ РЕПЫ СНОСИТ ПЕРКОНУ
+# репы-ключи
+echo "deb http://repo.zabbix.com/zabbix/2.2/debian wheezy main" >> /etc/apt/sources.list
+wget -O - http://repo.zabbix.com/zabbix-official-repo.key | apt-key add -
+apt-get update
+
+#zabbix - prereq
+apt-get install nmap libmysqlclient-dev libcurl4-openssl-dev libsnmp-dev
+
+
+#zabbix-src
+wget -O - http://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/2.2.1/zabbix-2.2.1.tar.gz/download > zabbix.tar.gz
+tar -zxvf zabbix.tar.gz
+cd zabbix*
+
+groupadd zabbix
+useradd -g zabbix zabbix
+
+#zabbix-db
+echo  "create database zabbix character set utf8;" | mysql
+mysql zabbix < database/mysql/schema.sql
+# остановитесь здесь, если вы создаете базу данных для Zabbix прокси
+mysql zabbix < database/mysql/images.sql
+mysql zabbix < database/mysql/data.sql
+
+#КОнфиги
+./configure --enable-server --with-mysql --with-net-snmp --with-libcurl
+
+#КОнпеляция
+make install
+
+# снова КОнфиги
+# прописываем dbPassword TODO sed
+nano /usr/local/etc/zabbix_server.conf
+
+#стартуем!
+zabbix_server
+
+#zabbix-frontend
+mkdir -f /var/wwws/zabbix
