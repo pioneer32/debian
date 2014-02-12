@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "deb http://repo.zabbix.com/zabbix/2.2/debian wheezy main" >> /etc/apt/sources.list
+wget -O - http://repo.zabbix.com/zabbix-official-repo.key | apt-key add -
+apt-get update
+
+apt-get install zabbix-agent
+
+sed -i 's/^Server=.*/Server=192.168.1.25/g' /etc/zabbix/zabbix_agentd.conf
+sed -i  '/^ServerActive=/s/^/\#/' /etc/zabbix/zabbix_agentd.conf
+sed -i 's/^Hostname=.*/Hostname=API-1/g' /etc/zabbix/zabbix_agentd.conf
+
+service zabbix-agent restart

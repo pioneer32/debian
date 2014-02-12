@@ -40,6 +40,17 @@ nano /usr/local/etc/zabbix_server.conf
 zabbix_server
 
 #zabbix-frontend
+
+sed -i 's/^post_max_size.*/post_max_size = 16M/g' /etc/php5/fpm/php.ini
+
+sed -i 's/^max_execution_time.*/max_execution_time = 300/g' /etc/php5/fpm/php.ini
+
+sed -i 's/^max_input_time.*/max_input_time = 300/g' /etc/php5/fpm/php.ini
+
+sed -i 's/^;date.timezone.*/date.timezone = \"Europe\/Moscow\"/g' /etc/php5/fpm/php.ini
+
+service php5-fpm restart
+
 mkdir -p /var/wwws/zabbix
 cd frontends/php
 cp -a . /var/wwws/zabbix
