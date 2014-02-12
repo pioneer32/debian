@@ -40,4 +40,10 @@ nano /usr/local/etc/zabbix_server.conf
 zabbix_server
 
 #zabbix-frontend
-mkdir -f /var/wwws/zabbix
+mkdir -p /var/wwws/zabbix
+cd frontends/php
+cp -a . /var/wwws/zabbix
+
+
+wget -O - https://raw.github.com/ivan-antonyuck/debian/master/zabbix/nginx.conf > /etc/nginx/nginx.conf
+wget -O - https://raw.github.com/ivan-antonyuck/debian/master/zabbix/zabbix.nginx.conf.d > /etc/nginx/conf.d/zabbix.nginx.conf.d
