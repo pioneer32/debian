@@ -1,4 +1,6 @@
 echo -e "# php 5.5\ndeb http://packages.dotdeb.org wheezy-php55 all\ndeb-src http://packages.dotdeb.org wheezy-php55 all" > /etc/apt/sources.list.d/php55.sources.list
+wget -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add -
+
 apt-get update && apt-get dist-upgrade
 apt-get install php5 php5-fpm php5-cli
 
