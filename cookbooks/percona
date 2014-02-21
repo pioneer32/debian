@@ -10,3 +10,9 @@ echo -e "[client]\nuser=root\npassword=**PASSWORD**\n" > /root/.my.cnf
 nano /etc/mysql/my.cnf
 
 apt-get install mysqltuner mytop
+
+
+# memcached plugin
+mysql < /usr/share/mysql/innodb_memcached_config.sql
+mysql -e "install plugin daemon_memcached soname 'libmemcached.so';show plugins;"
+
