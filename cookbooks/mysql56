@@ -1,3 +1,39 @@
 mkdir -p /tmp/mysql56 && cd /tmp/mysql56
-wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.16-debian6.0-x86_64.deb
+wget -O mysql56.deb http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.16-debian6.0-x86_64.deb
 apt-get install libaio1
+rm -rf /usr/local/mysql
+dpkg -i mysql56.deb
+groupadd mysql && useradd -r -g mysql mysql
+chown -R root:root /opt/mysql && chown -R mysql:mysql /opt/mysql/server-5.6
+cd /usr/local && ln -s /opt/mysql/server-5.6 mysql && cd mysql
+
+# перед следующим шагом важно чтобы /etc/mysql/my.cnf содержал правильные настройки размеров лог-файлов и table-per-file
+# !!! важный момент, пока не подключены все плагины, надо закоментить их директивы в /etc/mysql/my.cnf иначе следующий шаг не проканает
+install -o mysql -g mysql -d /var/lib/mysql && /opt/mysql/server-5.6/scripts/mysql_install_db --user=mysql --datadir=/var/lib/mysql
+
+cp support-files/mysql.server /etc/init.d/mysql && update-rc.d mysql defaults
+echo -e "PATH=\"/opt/mysql/server-5.6/bin:\$PATH\"\nMANPATH=\"/opt/mysql/server-5.6/man:\$MANPATH\"\n" > /etc/profile.d/mysql.sh
+
+cp /etc/mysql/my.cnf /etc/mysql/my.cnf.before56 && \
+sed -e 's/^\([ \t]*\)basedir\([ \t]*\)=\([ \t]*\)\(.*\)/\1basedir\2=\3\/opt\/mysql\/server-5.6/' -i /etc/mysql/my.cnf && \
+sed -e 's/^\([ \t]*\)pid-file\([ \t]*\)=\([ \t]*\)\(.*\)/\1pid-file\2=\3\/var\/run\/mysql\/mysqld.pid/' -i /etc/mysql/my.cnf
+
+install -o mysql -g mysql -d /var/run/mysql && \
+install -o mysql -g mysql -d /var/log/mysql && \
+install -o mysql -g mysql -d /usr/share/mysql && \
+ln -sf /usr/local/mysql/share/english/errmsg.sys /usr/share/mysql/errmsg.sys
+
+# вариант 1 (интерактивный)
+mysql_secure_installation
+
+# вариант 2 (не законченый, пока только пароль руту назначаю)
+service mysql restart --skip-grant-tables && \
+mysql --host 127.0.0.1 --port 3306 -e 'use `mysql`; update `user` set `password` = PASSWORD( "87J71911" ) where `User` = "root";' && \
+service mysql restart
+
+ln -sf /opt/mysql/server-5.6/lib/* /usr/lib/
+
+
+# включаем memcached plugin
+mysql < /opt/mysql/server-5.6/share/innodb_memcached_config.sql
+mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;"
