@@ -1,9 +1,10 @@
 apt-get update && apt-get dist-upgrade
 apt-get install pure-ftpd
-echo 'yes' > /etc/pure-ftpd/conf/ChrootEveryone && echo 'yes' > /etc/pure-ftpd/conf/NoAnonymous && echo 'yes' > /etc/pure-ftpd/conf/PAMAuthentication && echo "113 007" > /etc/pure-ftpd/conf/Umask
+echo 'yes' > /etc/pure-ftpd/conf/ChrootEveryone && echo 'yes' > /etc/pure-ftpd/conf/NoAnonymous && echo 'yes' > /etc/pure-ftpd/conf/PAMAuthentication && echo "113 002" > /etc/pure-ftpd/conf/Umask
+service pure-ftpd restart
 # пользователей добавляем так:
 # useradd -d хомяк -g группа -s /bin/sh имя_пользователя
-useradd -d /var/wwws/skills.bossnote.ru -g www-data -s /bin/sh bn_ftp_user_skills 
+useradd -d /var/wwws/skills.bossnote.ru -g www-data -s /bin/sh bn_ftp_user_skills
 # генерим пароль
 </dev/urandom tr -dc '12345!@#$%qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c8; echo ""
 # назначаем
