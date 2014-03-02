@@ -3,6 +3,7 @@ wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
 apt-get update && apt-get dist-upgrade
 
 # вариант из packages.dotdeb.org c 30 окт 2013 не работает, там просто пипец... НЕ СОБИРАЕТСЯ, ТАМ ПИЗДЕЦ ПОЛНЫЙ!!!
+# обновление от 02.02.2014, вариант из packages.dotdeb.org собирается, можно брать оттуда а не сосать с nginx.org
 cd /tmp && apt-get source nginx && apt-get build-dep nginx
 
 # вариант из nginx.org собирается
@@ -15,7 +16,7 @@ cd /tmp && apt-get source nginx=1.4.4-1~wheezy && apt-get build-dep nginx=1.4.4-
 mkdir ./nginx-modules
 
 # если нужен модуль ngx_http_redis >>>
-wget http://people.freebsd.org/~osa/ngx_http_redis-0.3.6.tar.gz && tar vfx ./ngx_http_redis-0.3.6.tar.gz -C ./nginx-modules/
+wget -O ./ngx_http_redis.tar.gz http://people.freebsd.org/~osa/ngx_http_redis-0.3.6.tar.gz && tar vfx ./ngx_http_redis.tar.gz -C ./nginx-modules/
 
 # если нужен модуль nginx_upload_module >>>
 
@@ -24,7 +25,7 @@ wget http://www.grid.net.ru/nginx/download/nginx_upload_module-2.2.0.tar.gz && t
 wget https://raw.github.com/pioneer32/debian/master/nginx/nginx-1.3.9_upload_module.patch
 patch ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c < ./nginx-1.3.9_upload_module.patch
 
-# вариант II
+# вариант II (основной)
 wget http://www.grid.net.ru/nginx/download/nginx_upload_module-2.2.0.tar.gz && tar xvf ./nginx_upload_module-2.2.0.tar.gz -C ./nginx-modules/
 wget -O ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c https://gist.github.com/pioneer32/6930808/raw/f9fd2659a08605346c53f3983f762769b7aedb76/ngx_http_upload_module.c
 
@@ -35,35 +36,36 @@ wget -O ./nginx-modules/nginx-upload-module/ngx_http_upload_module.c https://gis
 # если нужен nginx_http_lua (если в составе сорцов из репы дебиана не пришел этот модуль, начиная с 1.4.3-3 он приходит то надо)
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
 luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix
-# TODO добавить установку luajit
+# ставим luajit
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
-wget -O ./ngx_devel_kit_v0.2.19.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit_v0.2.19.tar.gz -C ./nginx-modules/
-wget -O ./lua_nginx_module_v0.9.0.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.0.tar.gz && tar xvf ./lua_nginx_module_v0.9.0.tar.gz -C ./nginx-modules/
+wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit.tar.gz -C ./nginx-modules/
+wget -O ./lua_nginx_module.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.4.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
 
 # если есть luajit >>>
 export LUAJIT_LIB=/usr/local/lib && export LUAJIT_INC=/usr/local/include/luajit-2.0
 
-# тут в конфиг добавляются ВСЕ выше перечисленные модули, а ненужные удаляются
-# если нужен дебаг, то лучше его принудительно прописать руками --with-debug
+# тут в конфиг автоматически добавляются ВСЕ модули найденные в /tmp/nginx-modules, а ненужные удаляются
+# если нужен дебаг, то его нужно принудительно прописать руками --with-debug (т.к. debug пакет в итоге не ставится)
 a=`ls ./nginx-1.4.*/debian/rules` && \
 cp $a "$a.bak" && \
+am=`n=0;ls -1 ./nginx-modules/ | while read m; do if [ $n -ge 1 ]; then echo -n " \\\\\\\\\n"; fi; echo -n "\1--add-module=\/tmp\/nginx-modules\/$m"; n=1; done;` && \
 grep -v -P '(with-http_secure_link_module|with-http_sub_module|with-http_addition_module|with-http_realip_module|with-http_dav_module|with-http_flv_module|with-http_mp4_module|with-http_random_index_module|with-mail|with-mail_ssl_module|nginx-auth-pam|nginx-dav-ext-module|nginx-echo|nginx-syslog|nginx-cache-purge|ngx_http_pinba_module|ngx_http_substitutions_filter_module|nginx-x-rid-header)' "$a.bak" > $a && \
-sed -e 's/^\([ \t]*\)--with-ipv6[ \t]*\\/\1--add-module=\/tmp\/nginx-modules\/ngx_http_redis-0.3.6 \\\n\1--add-module=\/tmp\/nginx-modules\/nginx_upload_module-2.2.0 \\\n\1--add-module=\/tmp\/nginx-modules\/ngx_devel_kit-0.2.19 \\\n\1--add-module=\/tmp\/nginx-modules\/lua-nginx-module-0.9.0 \\/' -i $a && \
-sed -e 's/^\([ \t]*\)--with-ipv6$/\1--add-module=\/tmp\/nginx-modules\/ngx_http_redis-0.3.6 \\\n\1--add-module=\/tmp\/nginx-modules\/nginx_upload_module-2.2.0 \\\n\1--add-module=\/tmp\/nginx-modules\/ngx_devel_kit-0.2.19 \\\n\1--add-module=\/tmp\/nginx-modules\/lua-nginx-module-0.9.0/' -i $a && \
+sed -e "s/^\([ \t]*\)--with-ipv6[ \t]*/$am /" -i $a && \
+sed -e "s/^\([ \t]*\)--with-ipv6$/$am/" -i $a && \
 sed -e 's/^\([ \t]*\)dh_shlibdeps -a/\1dpkg-shlibdeps -a --dpkg-shlibdeps-params=--ignore-missing-info/' -i $a && \
 echo -e "override_dh_shlibdeps:\n        dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info\n" >> $a
 
 # для luajit, если вывалится по dpkg-shlibdeps: error: no dependency information found for /usr/local/lib/libluajit-5.1.so.2 (used by debian/nginx-full/usr/sbin/nginx)
 # надо строку 'dpkg-shlibdeps -a' заменить на 'dpkg-shlibdeps -a --dpkg-shlibdeps-params=--ignore-missing-info'
-# в авто-патче debian/rules который выше это сделано
+# в авто-патче debian/rules который выше ЭТО УЖЕ СДЕЛАНО
 
 cd ./nginx-1.4.* && dpkg-buildpackage -rfakeroot
 
-# задрали версии менять... смотрим как называется
-ls -la ../nginx*.deb
-dpkg -i ../nginx_1.4.4-1~wheezy_amd64.deb
+# задрали версии менять... (дебаг прописывали у основного)
+a=`ls -1 ../nginx*.deb | grep -v debug`; dpkg -i $a
 
 # проверил nginx -V
+
 echo 'nginx hold' | dpkg --set-selections && echo 'nginx-debug hold' | dpkg --set-selections
 
 # если нужно
