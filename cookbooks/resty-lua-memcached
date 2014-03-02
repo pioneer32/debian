@@ -1,0 +1,1 @@
+cd /tmp && git clone https://github.com/agentzh/lua-resty-memcached.git && cd ./lua-resty-memcached && make install
