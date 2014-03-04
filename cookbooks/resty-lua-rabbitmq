@@ -1,1 +1,2 @@
-cd /tmp && git clone https://github.com/wingify/lua-resty-rabbitmqstomp.git && cd ./lua-resty-rabbitmqstomp && make install
+cd /tmp && git clone https://github.com/wingify/lua-resty-rabbitmqstomp.git && cd ./lua-resty-rabbitmqstomp && \
+sed -e 's/lualib/lua/' -i ./Makefile && make install DESTDIR=/usr/local PREFIX=lib
