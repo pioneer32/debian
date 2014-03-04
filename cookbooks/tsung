@@ -2,7 +2,6 @@ apt-get install erlang
 apt-get install gnuplot-nox libtemplate-perl libhtml-template-perl libhtml-template-expr-perl
 cd /tmp && wget http://tsung.erlang-projects.org/dist/tsung-1.4.2.tar.gz && tar -xvf tsung-1.4.2.tar.gz
 cd ./tsung-1.4.2 && ./configure && make && make install
-mkdir /root/.tsung
+mkdir -p /root/.tsung && cd /root/.tsung
 
-target_host = '178.205.251.227'; \
-echo -e "<servers>\n\t<server host="$target_host" port="80" type="tcp"></server>\n</servers>"
+# examples of configs in /tmp/tsung-1.4.2/examples
