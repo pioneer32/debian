@@ -33,11 +33,7 @@ wget -O ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c https
 cd ./nginx-modules && git clone https://github.com/vkholodkov/nginx-upload-module.git && cd ..
 wget -O ./nginx-modules/nginx-upload-module/ngx_http_upload_module.c https://gist.github.com/pioneer32/6930808/raw/f9fd2659a08605346c53f3983f762769b7aedb76/ngx_http_upload_module.c
 
-# если нужен nginx_http_lua (если в составе сорцов из репы дебиана не пришел этот модуль, начиная с 1.4.3-3 он приходит то надо)
-apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
-luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix
-# ставим luajit
-ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
+# если нужен nginx_http_lua (если в составе сорцов из репы дебиана не пришел этот модуль, начиная с 1.4.3-3 он приходит то надо, а с 1.4.5 перестал ) )
 wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit.tar.gz -C ./nginx-modules/
 wget -O ./lua_nginx_module.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.4.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
 
