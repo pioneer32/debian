@@ -1,0 +1,1 @@
+cd /tmp && git clone https://github.com/agentzh/lua-resty-mysql.git && cd ./lua-resty-mysql && make install
