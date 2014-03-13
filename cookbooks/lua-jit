@@ -1,14 +1,14 @@
 apt-get update
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
-cd /tmp && luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix
+cd /tmp && luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
 
-# ставим luajit
+# СЃС‚Р°РІРёРј luajit
 cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz
 cd ./LuaJIT-2.0.2 && make && make install
 
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 
-# ставим ossp-uuid
+# СЃС‚Р°РІРёРј ossp-uuid
 apt-get remove --purge libossp-uuid-dev
 apt-get autoremove
 wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz && tar -xvf ./uuid-1.6.2.tar.gz
@@ -17,5 +17,5 @@ ldconfig
 cd /tmp && git clone https://github.com/mah0x211/lua-ossp-uuid.git && cd ./lua-ossp-uuid
 luarocks make ./uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUID_LIBDIR=/usr/local/lib
 
-# проверим
+# РїСЂРѕРІРµСЂРёРј
 lua ./test.lua
