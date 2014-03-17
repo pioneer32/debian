@@ -1,6 +1,7 @@
 apt-get update
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
 cd /tmp && luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
+luarocks install luafilesystem
 
 # ставим luajit
 cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz
