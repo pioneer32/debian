@@ -13,15 +13,20 @@ make && make install
 
 # поставим npm
 cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
-# npm install -g connect
+# npm -g install connect
 # -g - для глобальной установки пакетов
+
+# websocket - нужно )
+npm -g install ws
+
+# Socket.IO (если нужно)
+npm -g install socket.io
 
 # демонизация модуль forever
 npm -g install forever
 # forever start app.js
 # forever stop app.js
 # forever restart app.js
-
 
 # пример init скрипта, поместить /etc/init.d/nodeup
 
@@ -43,6 +48,7 @@ stop)
 esac
 exit 0
 
+# сделаем +x и поместим в автозапуск
 chmod 755 /etc/init.d/nodeup && update-rc.d nodeup defaults
 
 # для удаления из автолоада
