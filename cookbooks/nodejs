@@ -1,0 +1,49 @@
+apt-get update && apt-get dist-upgrade
+apt-get install python g++ make libssl-dev checkinstall
+cd /tmp && mkdir -p ./nodejs && cd $_
+wget http://nodejs.org/dist/node-latest.tar.gz && tar -xzvf node-latest.tar.gz && cd node-v*
+./configure
+
+# вариант 1, надо в версии (3) в диалоге заменить версию, убрать v (пример v0.10 -> 0.10)
+checkinstall
+sudo dpkg -i node_*
+
+# вариант 2 (основной)
+make && make install
+
+# поставим npm
+cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
+# npm install -g connect
+# -g - для глобальной установки пакетов
+
+# демонизация модуль forever
+npm -g install forever
+# forever start app.js
+# forever stop app.js
+# forever restart app.js
+
+
+# пример init скрипта, поместить /etc/init.d/nodeup
+
+#!/bin/sh
+#/etc/init.d/nodeup
+export PATH=$PATH:/usr/local/bin
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
+case "$1" in
+  start)
+  exec forever --sourceDir=/path/to/directory/containing_script -p /path/to/forever/pidetcfiles script.js scriptarguments
+  ;;
+stop)
+  exec forever stop --sourceDir=/path/to/directory/containing_script script.js
+  ;;
+*)
+  echo "Usage: /etc/init.d/nodeup {start|stop}"
+  exit 1
+  ;;
+esac
+exit 0
+
+chmod 755 /etc/init.d/nodeup && update-rc.d nodeup defaults
+
+# для удаления из автолоада
+update-rc.d -f nodeup remove
