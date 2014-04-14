@@ -1,0 +1,7 @@
+!!! не собирается... валится на ошибке...
+
+apt-get install libevent-dev libglib2.0-dev automake libboost-dev libssl-dev flex python-dev
+cd /tmp && mkdir thrift && cd ./thrift && wget http://archive.apache.org/dist/thrift/0.9.1/thrift-0.9.1.tar.gz
+tar -xzf ./thrift-0.9.1.tar.gz && cd ./thrift-0.9.1
+./configure CPPFLAGS="-DHAVE_INTTYPES_H -DHAVE_NETINET_IN_H" --without-erlang --without-php --without-python
+make && make install

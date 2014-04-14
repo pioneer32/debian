@@ -40,4 +40,4 @@ ntpdate -bs ru.pool.ntp.org
 # проверил ps aux | grep ntp
 # проверил date
 
-apt-get install mc dpkg-dev build-essential fakeroot debhelper
+apt-get install mc dpkg-dev build-essential fakeroot debhelper sysstat atop

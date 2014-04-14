@@ -3,7 +3,6 @@ apt-get dist-upgrade
 
 apt-get install git-core gitosis
 adduser --system --shell /bin/sh --gecos 'git version control' --group --disabled-password --home /home/git git
-
 su git
 cd && mkdir .ssh
 # на клиенте генерим rsa ключ (в eclipse)
