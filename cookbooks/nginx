@@ -26,7 +26,7 @@ wget https://raw.github.com/pioneer32/debian/master/nginx/nginx-1.3.9_upload_mod
 patch ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c < ./nginx-1.3.9_upload_module.patch
 
 # вариант II (основной)
-wget http://www.grid.net.ru/nginx/download/nginx_upload_module-2.2.0.tar.gz && tar xvf ./nginx_upload_module-2.2.0.tar.gz -C ./nginx-modules/
+wget http://www.grid.net.ru/nginx/download/nginx_upload_module-2.2.0.tar.gz && tar xvf ./nginx_upload_module-2.2.0.tar.gz -C ./nginx-modules/ && \
 wget -O ./nginx-modules/nginx_upload_module-2.2.0/ngx_http_upload_module.c https://gist.github.com/pioneer32/6930808/raw/f9fd2659a08605346c53f3983f762769b7aedb76/ngx_http_upload_module.c
 
 # вариант III (не собирается)
@@ -38,6 +38,7 @@ apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libn
 luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix
 # ставим luajit
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
+
 wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit.tar.gz -C ./nginx-modules/
 wget -O ./lua_nginx_module.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.4.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
 
