@@ -15,6 +15,11 @@ make && make install
 cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
 # npm -g install connect
 # -g - для глобальной установки пакетов
+# по умолчанию все пакеты с ключем -g ставятся в /usr/local (значение prefix)
+# все настройки можно глянуть "npm config ls -l" что то изменить "npm config set prefix /usr/local"
+# вариант решения проблемы:
+echo 'export NODE_PATH="'$(npm root -g)'"' >> ~/.bash_profile && . ~/.bash_profile
+# но надо запускать от пользователя от которого будет работать нода
 
 # websocket - нужно )
 npm -g install ws
