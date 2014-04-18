@@ -1,0 +1,15 @@
+# memcached
+cd /tmp && git clone https://github.com/agentzh/lua-resty-memcached.git && cd ./lua-resty-memcached && make install
+
+# mysql
+cd /tmp && git clone https://github.com/agentzh/lua-resty-mysql.git && cd ./lua-resty-mysql && make install
+
+# rabbitmq
+cd /tmp && git clone https://github.com/wingify/lua-resty-rabbitmqstomp.git && cd ./lua-resty-rabbitmqstomp && \
+sed -e 's/lualib/lua/' -i ./Makefile && make install DESTDIR=/usr/local PREFIX=lib
+
+# redis
+cd /tmp && git clone https://github.com/agentzh/lua-resty-redis.git && cd lua-resty-redis && make install
+
+# upload
+cd /tmp && git clone https://github.com/agentzh/lua-resty-upload.git && cd lua-resty-upload && make install
