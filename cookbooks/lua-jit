@@ -7,11 +7,11 @@ luarocks install luafilesystem
 cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz
 cd ./LuaJIT-2.0.2 && make && make install
 
+# ??? один раз пришлость ставить -sf
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 
 # ставим ossp-uuid
-apt-get remove --purge libossp-uuid-dev
-apt-get autoremove
+apt-get remove --purge libossp-uuid-dev && apt-get autoremove
 wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz && tar -xvf ./uuid-1.6.2.tar.gz
 cd ./uuid-1.6.2 && ./configure && make && make install
 ldconfig
