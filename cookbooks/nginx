@@ -34,8 +34,8 @@ cd ./nginx-modules && git clone https://github.com/vkholodkov/nginx-upload-modul
 wget -O ./nginx-modules/nginx-upload-module/ngx_http_upload_module.c https://gist.github.com/pioneer32/6930808/raw/f9fd2659a08605346c53f3983f762769b7aedb76/ngx_http_upload_module.c
 
 # если нужен nginx_http_lua (если в составе сорцов из репы дебиана не пришел этот модуль, начиная с 1.4.3-3 он приходит то надо, а с 1.4.5 перестал ) )
-wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit.tar.gz -C ./nginx-modules/
-wget -O ./lua_nginx_module.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.4.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
+wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit.tar.gz -C ./nginx-modules/ \
+&& wget -O ./lua_nginx_module.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.4.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
 
 # если есть luajit >>>
 export LUAJIT_LIB=/usr/local/lib && export LUAJIT_INC=/usr/local/include/luajit-2.0
@@ -64,8 +64,10 @@ a=`ls -1 ../nginx*.deb | grep -v debug`; dpkg -i $a
 
 echo 'nginx hold' | dpkg --set-selections && echo 'nginx-debug hold' | dpkg --set-selections
 
+usermod nginx -g www-data
+
 # если нужно
-wget -qO- https://raw.github.com/pioneer32/debian/master/nginx.conf > /etc/nginx/nginx.conf
+curl -L https://raw.githubusercontent.com/pioneer32/debian/master/nginx/nginx.conf > /etc/nginx/nginx.conf
 
 # правим конфиг
 nano /etc/nginx/nginx.conf
