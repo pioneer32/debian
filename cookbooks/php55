@@ -5,7 +5,7 @@ apt-get update && apt-get dist-upgrade
 apt-get install php5 php5-fpm php5-cli
 
 # можно так, а можно руками написать >>>
-wget -qO- https://raw.github.com/pioneer32/debian/master/php-fpm.conf > /etc/php5/fpm/php-fpm.conf
+wget -qO- https://raw.github.com/pioneer32/debian/master/php-fpm.conf > /etc/php5/fpm/php-fpm.conf //404!
 mkdir -p /var/log/php
 
 # правим конфиг >>>
