@@ -1,12 +1,6 @@
 apt-get update && apt-get dist-upgrade
 apt-get install redis-server
 
-# клиент для php
-cd /tmp && git clone https://github.com/nicolasff/phpredis.git && cd phpredis && phpize
-./configure && make && make install && echo "extension=redis.so" > /etc/php5/mods-available/phpredis.ini && echo /etc/php5/{cli/,fpm/}conf.d/20-phpredis.ini | xargs -n1 ln -sf /etc/php5/mods-available/phpredis.ini $1
-# проверил php -m
-service php5-fpm restart
-
 # для munin
 cd /usr/share/munin/plugins
 git clone git://github.com/tjstein/php5-fpm-munin-plugins.git && git clone https://github.com/bpineau/redis-munin.git

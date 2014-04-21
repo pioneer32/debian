@@ -4,29 +4,24 @@ apt-get update && apt-get dist-upgrade
 apt-get install rabbitmq-server
 cd /tmp
 
-# вариант 0 (не рабочий пока, не поправят pecl amqp)
-git clone https://github.com/alanxz/rabbitmq-c.git
-cd rabbitmq-c
-git submodule init
-git submodule update
+# вариант 0 (рабочий)
 apt-get install pkg-config
-autoreconf -i
-./configure
-make && make install
+cd /tmp && git clone https://github.com/alanxz/rabbitmq-c.git && cd rabbitmq-c && git submodule init && git submodule update
+autoreconf -i && ./configure && make && make install
 
+
+# I и II - были актуальные, пока не поправили pecl-amqp, на 21.04.2014 все уже ок
 # вариант I
+cd /tmp
 apt-get install cmake
-wget https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-v0.3.0.zip
-unzip ./rabbitmq-c-v0.3.0.zip
-mkdir build
-cd build
-cmake ..
+wget https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-v0.3.0.zip && unzip ./rabbitmq-c-v0.3.0.zip
+cd rabbitmq-* && mkdir build && cd $_ && cmake ..
 cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
 cmake --build . --target install
 
 # вариант II
-wget https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-v0.3.0.zip
-unzip ./rabbitmq-c-v0.3.0.zip
+cd /tmp
+wget https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-v0.3.0.zip && unzip ./rabbitmq-c-v0.3.0.zip
 cd rabbitmq-c-rabbitmq-c-v0.3.0
 autoreconf -i
 ./configure && make && make install
@@ -40,8 +35,3 @@ rabbitmqctl set_permissions -p /bn bn-rmq-user ".*" ".*" ".*"
 # полностью сбросить рабит >>>
 rabbitmqctl stop_app && rabbitmqctl reset && rabbitmqctl start_app
 
-# клиент для php >>>
-pecl install amqp
-echo -e "extension=amqp.so\n" > /etc/php5/conf.d/amqp.ini
-# проверим php -m
-service php5-fpm restart
