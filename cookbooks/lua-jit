@@ -12,10 +12,12 @@ ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 
 # ставим ossp-uuid
 apt-get remove --purge libossp-uuid-dev && apt-get autoremove
-wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz && tar -xvf ./uuid-1.6.2.tar.gz
-#Если за NAT-ом, то:
-wget --passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz && tar -xvf ./uuid-1.6.2.tar.gz
-cd ./uuid-1.6.2 && ./configure && make && make install
+
+wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+# иногда есть трудности с пассивным режимом... тогда:
+wget --passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+
+tar -xvf ./uuid-1.6.2.tar.gz && cd ./uuid-1.6.2 && ./configure && make && make install
 ldconfig
 cd /tmp && git clone https://github.com/mah0x211/lua-ossp-uuid.git && cd ./lua-ossp-uuid
 luarocks make ./uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUID_LIBDIR=/usr/local/lib
