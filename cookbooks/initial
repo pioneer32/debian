@@ -42,7 +42,7 @@ reboot
 dpkg-reconfigure locales
 dpkg-reconfigure tzdata
 
-apt-get install ntp ntpdate mc dpkg-dev build-essential fakeroot debhelper sysstat atop
+apt-get install ntp ntpdate mc dpkg-dev build-essential fakeroot debhelper sysstat atop debsums
 
 ntpdate -bs ru.pool.ntp.org
 # проверил ps aux | grep ntp
