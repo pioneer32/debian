@@ -59,7 +59,7 @@ echo -e "override_dh_shlibdeps:\n        dh_shlibdeps --dpkg-shlibdeps-params=--
 cd ./nginx-1.* && dpkg-buildpackage -rfakeroot
 
 # задрали версии менять... (дебаг прописывали у основного)
-a=`ls -1 ../nginx*.deb | grep -v debug`; dpkg -i $a
+dpkg -i `ls -1 ../nginx*.deb | grep -v debug`
 
 # проверил nginx -V
 
