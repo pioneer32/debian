@@ -46,7 +46,7 @@ mysql_secure_installation
 
 # вариант 2 (не законченый, пока только пароль руту назначаю)
 service mysql restart --skip-grant-tables && \
-mysql --host 127.0.0.1 --port 3306 -e 'use `mysql`; update `user` set `password` = PASSWORD( "root" ) where `User` = "root";' && \
+mysql --host 127.0.0.1 --port 3306 -e 'use `mysql`; update `user` set `password` = PASSWORD( "87J71911" ) where `User` = "root";' && \
 service mysql restart
 
 ln -sf /opt/mysql/server-5.6/lib/* /usr/lib/
@@ -56,5 +56,6 @@ ln -sf /opt/mysql/server-5.6/lib/* /usr/lib/
 mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS test; DROP TABLE IF EXISTS test.demo_test;" \
 && mysql < /opt/mysql/server-5.6/share/innodb_memcached_config.sql \
 && mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;" | grep memcached
-
-
+# для теста
+telnet 127.0.0.1 11211
+# далее get @@aaa.AA
