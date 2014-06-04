@@ -1,6 +1,6 @@
 apt-get update
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
-cd /tmp && luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
+cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
 luarocks install luafilesystem
 
 # ставим luajit
@@ -24,3 +24,14 @@ luarocks make ./uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUI
 
 # проверим
 lua ./test.lua
+
+# json support
+# самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
+luarocks install lua-cjson
+
+# самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
+luarocks install lua-cjson
+# лечим выше укзанный баг установкой "обертки" https://github.com/bungle/lua-resty-cjson
+# Важно! работает только с LuaJIT
+cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git
+cd lua-resty-cjson
