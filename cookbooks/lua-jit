@@ -30,10 +30,12 @@ lua ./test.lua
 luarocks install lua-cjson
 
 # самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
-luarocks install lua-cjson
-# лечим выше укзанный баг установкой "обертки" https://github.com/bungle/lua-resty-cjson
+# luarocks install lua-cjson
+# лечим выше укзанный баг установкой https://github.com/bungle/lua-resty-cjson
 # Важно! работает только с LuaJIT
-cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git
-cd lua-resty-cjson
-a=$(locate cjson.so | sed -e 's/\//\\\//g' | sed -e 's/\./\\\./g') && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1$a\2/" -i ./cjson.lua
+cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git && cd lua-resty-cjson
+# http://sourceforge.net/projects/cjson/files/latest/download
+wget -O cJSONFiles.zip http://downloads.sourceforge.net/project/cjson/cJSONFiles.zip?r=&ts=1401879441&use_mirror=softlayer-ams
+unzip ./cJSONFiles.zip && cd ./cJSON && gcc cJSON.c -o cjson.so -shared -fPIC && cp ./cjson.so /usr/local/lib/lua/resty/cjson.so
+cd ../lib/resty/ && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1\/usr\/local\/lib\/lua\/resty\/cjson\.so\2/" -i ./cjson.lua
 cp ./cjson.lua /usr/local/lib/lua/resty/cjson.lua
