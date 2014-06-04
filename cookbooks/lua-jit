@@ -35,3 +35,5 @@ luarocks install lua-cjson
 # Важно! работает только с LuaJIT
 cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git
 cd lua-resty-cjson
+a=$(locate cjson.so | sed -e 's/\//\\\//g' | sed -e 's/\./\\\./g') && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1$a\2/" -i ./cjson.lua
+cp ./cjson.lua /usr/local/lib/lua/resty/cjson.lua
