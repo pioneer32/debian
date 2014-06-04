@@ -1,5 +1,19 @@
+# начиная с версии 5.6.17 появилась в репе wheezy
+apt-get install mysql-server-5.6 mysql-client-5.6
+
+# !!! но в пакете который приходит с dotdeb нет memcached plugin (
+# включаем memcached plugin
+mysql -e "CREATE DATABASE IF NOT EXISTS test" && mysql < /usr/share/mysql/innodb_memcached_config.sql
+mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;"
+
+# в /root/.my.cnf надо прописть пароль рута
+
+
+
+# ) но можно собирать и так:
+
 mkdir -p /tmp/mysql56 && cd /tmp/mysql56
-wget -O mysql56.deb http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.16-debian6.0-x86_64.deb
+wget -O mysql56.deb http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.17-debian6.0-x86_64.deb
 apt-get install libaio1
 rm -rf /usr/local/mysql
 dpkg -i mysql56.deb
@@ -7,13 +21,17 @@ groupadd mysql && useradd -r -g mysql mysql
 chown -R root:root /opt/mysql && chown -R mysql:mysql /opt/mysql/server-5.6
 cd /usr/local && ln -s /opt/mysql/server-5.6 mysql && cd mysql
 
-# перед следующим шагом важно чтобы /etc/mysql/my.cnf содержал правильные настройки размеров лог-файлов и table-per-file
+# если установка чистая >
+curl -L https://raw.githubusercontent.com/pioneer32/debian/b9063f65c44c80009a4c8859dfcc36d1416c5d50/misc/mysql56.cnf > /etc/mysql/my.cnf
+
+# перед следующим шагом важно чтобы /etc/mysql/my.cnf содержал правильные настройки размеров лог-файлов и innodb_file_per_table
 # !!! важный момент, пока не подключены все плагины, надо закоментить их директивы в /etc/mysql/my.cnf иначе следующий шаг не проканает
 install -o mysql -g mysql -d /var/lib/mysql && /opt/mysql/server-5.6/scripts/mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 cp support-files/mysql.server /etc/init.d/mysql && update-rc.d mysql defaults
-echo -e "PATH=\"/opt/mysql/server-5.6/bin:\$PATH\"\nMANPATH=\"/opt/mysql/server-5.6/man:\$MANPATH\"\n" > /etc/profile.d/mysql.sh
+echo -e "PATH=\"/opt/mysql/server-5.6/bin:\$PATH\"\nMANPATH=\"/opt/mysql/server-5.6/man:\$MANPATH\"\n" > /etc/profile.d/mysql.sh && source /etc/profile.d/mysql.sh
 
+# не нужно если чистая установка
 cp /etc/mysql/my.cnf /etc/mysql/my.cnf.before56 && \
 sed -e 's/^\([ \t]*\)basedir\([ \t]*\)=\([ \t]*\)\(.*\)/\1basedir\2=\3\/opt\/mysql\/server-5.6/' -i /etc/mysql/my.cnf && \
 sed -e 's/^\([ \t]*\)pid-file\([ \t]*\)=\([ \t]*\)\(.*\)/\1pid-file\2=\3\/var\/run\/mysql\/mysqld.pid/' -i /etc/mysql/my.cnf
@@ -35,5 +53,9 @@ ln -sf /opt/mysql/server-5.6/lib/* /usr/lib/
 
 
 # включаем memcached plugin
-mysql < /opt/mysql/server-5.6/share/innodb_memcached_config.sql
-mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;"
+mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS test; DROP TABLE IF EXISTS test.demo_test;" \
+&& mysql < /opt/mysql/server-5.6/share/innodb_memcached_config.sql \
+&& mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;" | grep memcached
+# для теста
+telnet 127.0.0.1 11211
+# далее get @@aaa.AA

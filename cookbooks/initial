@@ -3,16 +3,23 @@
 # убираю ненужное:
 # если не буду юзать nsf, то надо удалить ее полностью update-rc.d -f portmap disable # или update-rc.d -f rpcbind disable смотря что есть
 # если не буду юзать nsf, то update-rc.d -f nfs-common disable
-# если не буду юзать nsf, то apt-get --purge remove portmap rpcbind tasksel tasksel-data
-# иначе apt-get --purge remove tasksel tasksel-data
+
+# если не буду юзать nsf, то
+apt-get --purge remove portmap rpcbind tasksel tasksel-data
+# иначе
+apt-get --purge remove tasksel tasksel-data
+
 apt-get autoremove
-echo -e "alias grep='grep --color=auto'\nalias ls='ls --color=auto'\n" >> ~/.bashrc
+echo -e "alias grep='grep --color=auto'\nalias ls='ls --color=auto'\n" >> /etc/profile.d/colors.sh
 echo -e "order hosts,bind\n" >> /etc/host.conf 
 echo 'GRUB_CMDLINE_LINUX="ipv6.disable=1"' >> /etc/default/grub
 update-grub
 # если все ок, то reboot
 
-wget -qO- https://raw.github.com/pioneer32/debian/master/sources.list > /etc/apt/sources.list
+# в wheezy wget битый (траблы с https TLS)... приходится использовать culr -L поэтому
+apt-get install curl
+wget -qO- https://raw.githubusercontent.com/pioneer32/debian/master/cookbooks/sources.list > /etc/apt/sources.list
+curl -L https://raw.githubusercontent.com/pioneer32/debian/master/cookbooks/sources.list > /etc/apt/sources.list
 
 echo -e "# dotdeb repo\ndeb http://packages.dotdeb.org squeeze all\ndeb-src http://packages.dotdeb.org squeeze all" > /etc/apt/sources.list.d/dotdeb.sources.list
 wget http://www.dotdeb.org/dotdeb.gpg && cat dotdeb.gpg | apt-key add -
@@ -33,11 +40,10 @@ reboot
 
 # настроить локали
 dpkg-reconfigure locales
-
 dpkg-reconfigure tzdata
-apt-get install ntp ntpdate
+
+apt-get install ntp ntpdate mc dpkg-dev build-essential fakeroot debhelper sysstat atop debsums
+
 ntpdate -bs ru.pool.ntp.org
 # проверил ps aux | grep ntp
 # проверил date
-
-apt-get install mc dpkg-dev build-essential fakeroot debhelper sysstat atop

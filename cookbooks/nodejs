@@ -18,7 +18,8 @@ cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
 # по умолчанию все пакеты с ключем -g ставятся в /usr/local (значение prefix)
 # все настройки можно глянуть "npm config ls -l" что то изменить "npm config set prefix /usr/local"
 # вариант решения проблемы:
-echo 'export NODE_PATH="'$(npm root -g)'"' >> ~/.bash_profile && . ~/.bash_profile
+# echo 'export NODE_PATH="'$(npm root -g)'"' >> ~/.bash_profile && . ~/.bash_profile
+echo -e 'NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && source /etc/profile.d/node.sh
 # но надо запускать от пользователя от которого будет работать нода
 
 # websocket - нужно )

@@ -1,0 +1,11 @@
+# по умолчанию использует /var/lib/dpkg/info/*.md5sums
+
+# проверить и вывести список измененных файлов (с ключем -a так-же проверит конфигурапционные файлы)
+debsums -с
+
+# тоже самое, но вместо /var/lib/dpkg/info/*.md5sums использовать *.deb файлы в /var/cache/apt/archives и сгенерить md5 суммы
+debsums -cgp /var/cache/apt/archives
+
+# список  пакетов (или  deb-ов), которые не имеют файла в /var/lib/dpkg/info/*.md5sums
+debsums -l
+

@@ -5,11 +5,30 @@ apt-get update && apt-get dist-upgrade
 apt-get install php5 php5-fpm php5-cli
 
 # можно так, а можно руками написать >>>
-wget -qO- https://raw.github.com/pioneer32/debian/master/php-fpm.conf > /etc/php5/fpm/php-fpm.conf
+curl -L https://raw.githubusercontent.com/pioneer32/debian/master/php/php-fpm.conf > /etc/php5/fpm/php-fpm.conf
+
+
+
 mkdir -p /var/log/php
 
 # правим конфиг >>>
 nano /etc/php5/fpm/php.ini
 
 apt-get install php-pear php5-dev
+
+# клиент amqp
+pecl install amqp
+echo "extension=amqp.so" > /etc/php5/mods-available/amqp.ini
+m='amqp' && echo /etc/php5/{cli/,fpm/}conf.d/20-$m.ini | xargs -n1 ln -sf /etc/php5/mods-available/$m.ini $1
+
+# клиент redis
+cd /tmp && git clone https://github.com/nicolasff/phpredis.git && cd phpredis && phpize
+./configure && make && make install
+echo "extension=redis.so" > /etc/php5/mods-available/phpredis.ini
+m='phpredis' && echo /etc/php5/{cli/,fpm/}conf.d/20-$m.ini | xargs -n1 ln -sf /etc/php5/mods-available/$m.ini $1
+
+# проверил php -m
+service php5-fpm restart
+
+# проверим php -m
 service php5-fpm restart

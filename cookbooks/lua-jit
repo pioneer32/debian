@@ -1,22 +1,41 @@
 apt-get update
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
-cd /tmp && luarocks install luasocket && luarocks install lua-cjson && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
+cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
 luarocks install luafilesystem
 
 # ставим luajit
 cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz
 cd ./LuaJIT-2.0.2 && make && make install
 
+# ??? один раз пришлость ставить -sf
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 
 # ставим ossp-uuid
-apt-get remove --purge libossp-uuid-dev
-apt-get autoremove
-wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz && tar -xvf ./uuid-1.6.2.tar.gz
-cd ./uuid-1.6.2 && ./configure && make && make install
+apt-get remove --purge libossp-uuid-dev && apt-get autoremove
+
+wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+# иногда есть трудности с пассивным режимом... тогда:
+wget --passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+
+tar -xvf ./uuid-1.6.2.tar.gz && cd ./uuid-1.6.2 && ./configure && make && make install
 ldconfig
 cd /tmp && git clone https://github.com/mah0x211/lua-ossp-uuid.git && cd ./lua-ossp-uuid
 luarocks make ./uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUID_LIBDIR=/usr/local/lib
 
 # проверим
 lua ./test.lua
+
+# json support
+# самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
+luarocks install lua-cjson
+
+# самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
+# luarocks install lua-cjson
+# лечим выше укзанный баг установкой https://github.com/bungle/lua-resty-cjson
+# Важно! работает только с LuaJIT
+cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git && cd lua-resty-cjson
+# http://sourceforge.net/projects/cjson/files/latest/download
+wget -O cJSONFiles.zip http://downloads.sourceforge.net/project/cjson/cJSONFiles.zip?r=&ts=1401879441&use_mirror=softlayer-ams
+unzip ./cJSONFiles.zip && cd ./cJSON && gcc cJSON.c -o cjson.so -shared -fPIC && cp ./cjson.so /usr/local/lib/lua/resty/cjson.so
+cd ../lib/resty/ && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1\/usr\/local\/lib\/lua\/resty\/cjson\.so\2/" -i ./cjson.lua
+cp ./cjson.lua /usr/local/lib/lua/resty/cjson.lua
