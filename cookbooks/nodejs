@@ -22,17 +22,14 @@ cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
 echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmod +x /etc/profile.d/node.sh && /etc/profile.d/node.sh
 # но надо запускать от пользователя от которого будет работать нода
 
-npm -g install mysql
-npm -g install cookie
+npm -g install hiredis redis
+npm -g install mysql cookie express
 
 # websocket - нужно )
 npm -g install ws
 
-# express - нужно )
-npm -g install express
 # express 3->4 развалился... его части
-npm -g install cookie-parser
-npm -g install body-parser
+npm -g install cookie-parser body-parser
 
 # Socket.IO (если нужно)
 npm -g install socket.io
