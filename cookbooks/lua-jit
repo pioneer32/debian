@@ -28,9 +28,6 @@ lua ./test.lua
 # json support
 # самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
 luarocks install lua-cjson
-
-# самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
-# luarocks install lua-cjson
 # лечим выше укзанный баг установкой https://github.com/bungle/lua-resty-cjson
 # Важно! работает только с LuaJIT
 cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git && cd lua-resty-cjson
@@ -39,3 +36,9 @@ wget -O cJSONFiles.zip http://downloads.sourceforge.net/project/cjson/cJSONFiles
 unzip ./cJSONFiles.zip && cd ./cJSON && gcc cJSON.c -o cjson.so -shared -fPIC && cp ./cjson.so /usr/local/lib/lua/resty/cjson.so
 cd ../lib/resty/ && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1\/usr\/local\/lib\/lua\/resty\/cjson\.so\2/" -i ./cjson.lua
 cp ./cjson.lua /usr/local/lib/lua/resty/cjson.lua
+
+# magick support
+# Важно! работает только с LuaJIT
+luarocks install --server=http://rocks.moonscript.org magick
+# либо
+wget -O /usr/local/lib/lua/magick.lua https://raw.githubusercontent.com/leafo/magick/master/magick/init.lua
