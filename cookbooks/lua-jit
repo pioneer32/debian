@@ -38,7 +38,9 @@ cd ../lib/resty/ && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1\/usr\/l
 cp ./cjson.lua /usr/local/lib/lua/resty/cjson.lua
 
 # magick support
+apt-get install libmagickwand-dev
 # Важно! работает только с LuaJIT
+# вариант I
 luarocks install --server=http://rocks.moonscript.org magick
-# либо
+# вариант II (основной)
 wget -O /usr/local/lib/lua/magick.lua https://raw.githubusercontent.com/leafo/magick/master/magick/init.lua
