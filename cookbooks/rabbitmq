@@ -29,7 +29,7 @@ autoreconf -i
 # настрока vhost-а, пользователя и прав
 rabbitmqctl add_vhost /bn
 rabbitmqctl list_vhosts
-rabbitmqctl add_user bn-rmq-user 87J71913
+rabbitmqctl add_user bn-rmq-user password
 rabbitmqctl set_permissions -p /bn bn-rmq-user ".*" ".*" ".*"
 
 # полностью сбросить рабит >>>
