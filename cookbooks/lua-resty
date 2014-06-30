@@ -13,3 +13,8 @@ cd /tmp && git clone https://github.com/agentzh/lua-resty-redis.git && cd lua-re
 
 # upload
 cd /tmp && git clone https://github.com/agentzh/lua-resty-upload.git && cd lua-resty-upload && make install
+
+
+# unstable !!!
+# smtp
+cd /tmp && git clone https://github.com/duhoobo/lua-resty-smtp.git && cd ./lua-resty-smtp && make install
