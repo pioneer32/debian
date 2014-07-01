@@ -1,0 +1,51 @@
+# list of all open files belonging to all active processes
+lsof
+
+# list processes which opened a specific file
+lsof /var/log/syslog
+
+# list opened files under a directory
+lsof +D /var/log/
+
+# list opened files based on process names starting with ssh
+lsof -c ssh
+
+# list files opened by a specific user
+lsof -u user
+
+# list files opened by all users, exclude specific user
+lsof -u ^user
+
+# combine more list options using OR
+lsof -c ssh -u user
+
+# combine more list options using AND
+lsof -c ssh -a -u user
+
+# list all open files by a specific process
+lsof -p 1753
+
+# for list all pids, just add -t key
+lsof -t -u user
+lsof -t -c ssh
+lsof -t /var/log/syslog
+
+# list network connections
+lsof -i # all network connections
+lsof -i4 # IPV4 network connections
+lsof -i6 # IPV6 network connections
+lsof -i tcp # list all TCP connections
+lsof -i udp # list all UDP connections
+
+# list processes which are listening on a particular port
+lsof -i :80
+
+# list processes which are listening on a particular port
+lsof -i :80
+
+# list all TCP or UDP connections
+
+
+
+# execute lsof in repeat mode (every 2 seconds)
+lsof -i -a -r2

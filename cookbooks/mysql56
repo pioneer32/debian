@@ -46,7 +46,7 @@ mysql_secure_installation
 
 # вариант 2 (не законченый, пока только пароль руту назначаю)
 service mysql restart --skip-grant-tables && \
-mysql --host 127.0.0.1 --port 3306 -e 'use `mysql`; update `user` set `password` = PASSWORD( "87J71911" ) where `User` = "root";' && \
+mysql --host 127.0.0.1 --port 3306 -e 'use `mysql`; update `user` set `password` = PASSWORD( "password" ) where `User` = "root";' && \
 service mysql restart
 
 ln -sf /opt/mysql/server-5.6/lib/* /usr/lib/
