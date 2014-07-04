@@ -40,28 +40,3 @@ npm -g install forever
 # forever stop app.js
 # forever restart app.js
 
-# пример init скрипта, поместить /etc/init.d/nodeup
-
-#!/bin/sh
-#/etc/init.d/nodeup
-export PATH=$PATH:/usr/local/bin
-export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
-case "$1" in
-  start)
-  exec forever --sourceDir=/path/to/directory/containing_script -p /path/to/forever/pidetcfiles script.js scriptarguments
-  ;;
-stop)
-  exec forever stop --sourceDir=/path/to/directory/containing_script script.js
-  ;;
-*)
-  echo "Usage: /etc/init.d/nodeup {start|stop}"
-  exit 1
-  ;;
-esac
-exit 0
-
-# сделаем +x и поместим в автозапуск
-chmod 755 /etc/init.d/nodeup && update-rc.d nodeup defaults
-
-# для удаления из автолоада
-update-rc.d -f nodeup remove
