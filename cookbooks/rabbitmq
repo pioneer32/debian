@@ -4,11 +4,11 @@ apt-get update && apt-get dist-upgrade
 apt-get install rabbitmq-server
 cd /tmp
 
+
 # вариант 0 (рабочий)
 apt-get install pkg-config
 cd /tmp && git clone https://github.com/alanxz/rabbitmq-c.git && cd rabbitmq-c && git submodule init && git submodule update
 autoreconf -i && ./configure && make && make install
-
 
 # I и II - были актуальные, пока не поправили pecl-amqp, на 21.04.2014 все уже ок
 # вариант I
@@ -26,12 +26,45 @@ cd rabbitmq-c-rabbitmq-c-v0.3.0
 autoreconf -i
 ./configure && make && make install
 
-# настрока vhost-а, пользователя и прав
-rabbitmqctl add_vhost /bn
-rabbitmqctl list_vhosts
-rabbitmqctl add_user bn-rmq-user password
-rabbitmqctl set_permissions -p /bn bn-rmq-user ".*" ".*" ".*"
 
-# полностью сбросить рабит >>>
-rabbitmqctl stop_app && rabbitmqctl reset && rabbitmqctl start_app
+# ставим rabbitmqadmin (альтернатива: скачать http://hg.rabbitmq.com/rabbitmq-management/raw-file/rabbitmq_v3_3_4/bin/rabbitmqadmin)
+rabbitmq-plugins enable rabbitmq_management
+service rabbitmq-server restart
+cd /tmp && wget http://localhost:15672/cli/rabbitmqadmin && mv ./rabbitmqadmin /usr/sbin/rabbitmqadmin && chmod +x /usr/sbin/rabbitmqadmin
+
+# создаем пользователя которому можно ходить в :15672
+rabbitmqctl add_user administrator PASSWORD
+rabbitmqctl set_user_tags administrator administrator
+# нужно повторить для каждого vhost:
+rabbitmqctl set_permissions -p / administrator ".*" ".*" ".*"
+
+
+# пример поднятия федерации:
+# на upstream (с кого будут забирать):
+# создаем пользователя от имени которого будет работать downstream (федерация)
+UVHOST='/test1' && UUSER='test' && UPASS=`</dev/urandom tr -dc '12345!@#$%qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM' | head -c8` && \
+rabbitmqctl add_vhost $UVHOST && rabbitmqctl add_user $UUSER $UPASS && rabbitmqctl set_permissions -p $UVHOST $UUSER ".*" ".*" ".*" && \
+echo "Created vhost $UVHOST, user $UUSER identified by password $UPASS"
+# на downstream:
+# ставим плагин rabbitmq_federation
+rabbitmq-plugins enable rabbitmq_federation && service rabbitmq-server restart
+# DVHOST - vhost на downstream, DUPSTREAM - как будет называться upstream, DUPSTREAM_SET - как будет называться группа upstream-ов
+# создаем vhost
+# создаем upstream с именем DUPSTREAM, указываем путь к upstream (параметры https://www.rabbitmq.com/federation-reference.html)
+# создаем группу upstream-ов с именем DUPSTREAM_SET
+# объявляем правило, что из группы upstream-ов DUPSTREAM_SET все exchange-ы подходящее под регулярку - федерируются в downstream
+# и теперь одной строкой:
+DVHOST='/test2' && DUPSTREAM='upstream' && DUPSTREAM_SET='upstream' && PATTERN='^amqp\.direct' && \
+rabbitmqctl add_vhost $DVHOST && \
+rabbitmqctl set_parameter -p $DVHOST federation-upstream $DUPSTREAM '{ "uri":"amqp://${UUSER}:${UPASS}@${UVHOST}/$(echo $UVHOST | sed -e 's/\//%2f/g')", "ack-mode":"on-confirm", "reconnect-delay":1, "prefetch-count":1000, "expires":"none"}' && \
+rabbitmqctl set_parameter -p $DVHOST federation-upstream-set  $DUPSTREAM_SET '[{ "upstream":"$DUPSTREAM" }]' && \
+rabbitmqctl set_policy -p $DVHOST federate-me "$PATTERN" '{ "federation-upstream-set":"$DUPSTREAM_SET" }'
+# далее важный момент, что эксченжеры, очереди и их бинды, пока они не объвленные как на downstream так и на upstream - не появляются в списке и не доставляются!
+# проверяем наличие (!!! ПОСЛЕ ОБЪЯВЛЕНИЯ ^^^ )
+rabbitmqctl list_exchanges -p $DVHOST name policy | grep federate-me
+# проверяем так-же состояние федерации (!!! ПОСЛЕ ОБЪЯВЛЕНИЯ ^^^ иначе видно будет только "[] ...done" )
+# на downstream
+rabbitmqctl eval 'rabbit_federation_status:status().'
+# если же все-таки ничего не объявлено, то можно глянуть на upstream (вроде должно быть видно ) )
+rabbitmqctl list_exchanges -p $UVHOST
 
