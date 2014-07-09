@@ -1,5 +1,3 @@
-# пример init скрипта, поместить /etc/init.d/application
-
 #!/bin/bash
 #
 ### BEGIN INIT INFO
@@ -19,8 +17,8 @@ PIDFILE="$APPLICATION_DIR/application.pid"
 LOGFILE="$APPLICATION_DIR/application.log"
 
 # NODE_BIN_DIR="/usr/local/bin/node"
-NODE_PATH="/usr/local/lib/node_modules"
-
+# NODE_PATH="/usr/local/lib/node_modules"
+. /etc/profile.d/node.sh
 
 export PATH=$PATH:/usr/local/bin
 export NODE_PATH=$NODE_PATH

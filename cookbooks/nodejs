@@ -19,23 +19,23 @@ cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
 # все настройки можно глянуть "npm config ls -l" что то изменить "npm config set prefix /usr/local"
 # вариант решения проблемы:
 # echo 'export NODE_PATH="'$(npm root -g)'"' >> ~/.bash_profile && . ~/.bash_profile
-echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmod +x /etc/profile.d/node.sh && /etc/profile.d/node.sh
+echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmod +x /etc/profile.d/node.sh && /etc/profile.d/node.sh && . /etc/profile.d/node.sh
 # но надо запускать от пользователя от которого будет работать нода
 
-npm -g install hiredis redis
-npm -g install mysql cookie express request
+npm install -g hiredis redis
+npm install -g mysql cookie express request
 
 # websocket - нужно )
-npm -g install ws
+npm install -g ws
 
 # express 3->4 развалился... его части
-npm -g install cookie-parser body-parser
+npm install -g cookie-parser body-parser amqp querystring
 
 # Socket.IO (если нужно)
 npm -g install socket.io
 
 # демонизация модуль forever (нужно)
-npm -g install forever
+npm install -g forever
 # forever start app.js
 # forever stop app.js
 # forever restart app.js
