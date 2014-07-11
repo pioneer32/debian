@@ -1,0 +1,22 @@
+# install
+curl https://npmjs.org/install.sh | sh
+
+# self update
+npm install npm -g
+
+# search package
+npm search something
+
+# view package info
+npm view something
+
+# install/uninstall package in current_directory/node_modules
+npm install something
+npm uninstall something
+
+# install/uninstall package for global usage
+npm install something -g
+npm uninstall something -g
+
+# install package of a certain version
+npm install something@0.3.0

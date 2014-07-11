@@ -23,8 +23,10 @@ echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmo
 # но надо запускать от пользователя от которого будет работать нода
 
 npm -g install hiredis redis
-npm -g install mysql cookie express
+npm -g install mysql cookie express http
 npm -g install escape-html
+npm -g install amqp
+npm -g install nodemailer
 
 # websocket - нужно )
 npm -g install ws
