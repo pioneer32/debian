@@ -38,6 +38,13 @@ rabbitmqctl set_user_tags administrator administrator
 # нужно повторить для каждого vhost:
 rabbitmqctl set_permissions -p / administrator ".*" ".*" ".*"
 
+# для включение поддержки stomp протокола
+rabbitmq-plugins enable rabbitmq_stomp
+# после чего пишем в /etc/rabbitmq/rabbitmq.config в структуру: {rabbitmq_stomp, [{tcp_listeners, [61613]}]}
+# если файла нет, то можно так:
+echo -e '[\n\t{rabbitmq_stomp, [{tcp_listeners, [61613]}]}\n].\n' > /etc/rabbitmq/rabbitmq.config
+service rabbitmq-server restart
+
 
 # пример поднятия федерации:
 # на upstream (с кого будут забирать):
