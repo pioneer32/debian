@@ -1,5 +1,6 @@
 apt-get update
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
+luarocks install luasec OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu
 cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
 luarocks install luafilesystem
 
@@ -11,10 +12,12 @@ cd ./LuaJIT-2.0.2 && make && make install
 ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 
 # ставим ossp-uuid
-apt-get remove --purge libossp-uuid-dev && apt-get autoremove
+cd /tmp && apt-get remove --purge libossp-uuid-dev && apt-get autoremove
 
-wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+wget ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
 # иногда есть трудности с пассивным режимом... тогда:
+wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+# либо
 wget --passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
 
 tar -xvf ./uuid-1.6.2.tar.gz && cd ./uuid-1.6.2 && ./configure && make && make install
@@ -22,7 +25,6 @@ ldconfig
 cd /tmp && git clone https://github.com/mah0x211/lua-ossp-uuid.git && cd ./lua-ossp-uuid
 luarocks make ./ossp-uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUID_LIBDIR=/usr/local/lib
 ln -s /usr/local/lib/lua/5.1/ossp-uuid.so /usr/local/lib/lua/5.1/uuid.so
-
 # проверим
 lua ./test.lua
 
