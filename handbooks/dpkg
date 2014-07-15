@@ -40,9 +40,11 @@ apt-get install packagename
 apt-get install -f packagename
 
 # установить только пакет игнорируя зависимости
-cd /tmp
-apt-get download packagename
-dpkg --force-all -i ./packagename.deb
+cd /tmp && apt-get download packagename && dpkg --force-all -i ./packagename.deb
+
+# установить пакет игнорируя реккомендации
+apt-get install--no-install-recommends packagename
+aptitude --without-recommends install packagename
 
 # сломанные зависимости или исправляем, или поступаем таким образом:
 dpkg --ignore-depends=packagename1,... -i packagename.deb
