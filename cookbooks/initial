@@ -16,10 +16,22 @@ echo 'GRUB_CMDLINE_LINUX="ipv6.disable=1"' >> /etc/default/grub
 update-grub
 # если все ок, то reboot
 
+apt-get install curl bash-completion
+
+# TODO сделать патч:
+# /etc/bash.bashrc, раскомментировать
+## enable bash completion in interactive shells
+#if ! shopt -oq posix; then
+#  if [ -f /usr/share/bash-completion/bash_completion ]; then
+#    . /usr/share/bash-completion/bash_completion
+#  elif [ -f /etc/bash_completion ]; then
+#    . /etc/bash_completion
+#  fi
+#fi
+
 # в wheezy wget битый (траблы с https TLS)... приходится использовать culr -L поэтому
-apt-get install curl
-wget -qO- https://raw.githubusercontent.com/pioneer32/debian/master/cookbooks/sources.list > /etc/apt/sources.list
-curl -L https://raw.githubusercontent.com/pioneer32/debian/master/cookbooks/sources.list > /etc/apt/sources.list
+wget -qO- https://raw.githubusercontent.com/pioneer32/debian/master/misc/sources.list > /etc/apt/sources.list
+curl -L https://raw.githubusercontent.com/pioneer32/debian/master/misc/sources.list > /etc/apt/sources.list
 
 echo -e "# dotdeb repo\ndeb http://packages.dotdeb.org squeeze all\ndeb-src http://packages.dotdeb.org squeeze all" > /etc/apt/sources.list.d/dotdeb.sources.list
 wget http://www.dotdeb.org/dotdeb.gpg && cat dotdeb.gpg | apt-key add -
