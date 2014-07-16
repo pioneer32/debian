@@ -43,7 +43,7 @@ apt-get install -f packagename
 cd /tmp && apt-get download packagename && dpkg --force-all -i ./packagename.deb
 
 # установить пакет игнорируя реккомендации
-apt-get install--no-install-recommends packagename
+apt-get install --no-install-recommends packagename
 aptitude --without-recommends install packagename
 
 # сломанные зависимости или исправляем, или поступаем таким образом:

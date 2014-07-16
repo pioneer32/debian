@@ -59,3 +59,6 @@ mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS
 # для теста
 telnet 127.0.0.1 11211
 # далее get @@aaa.AA
+
+# ставим mysqltuner
+apt-get install --no-install-recommends mysqltuner
