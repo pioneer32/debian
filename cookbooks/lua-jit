@@ -1,7 +1,17 @@
 apt-get update
 apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
+
+cd /tmp && wget https://github.com/brunoos/luasec/archive/luasec-0.5.tar.gz && tar -xvf ./luasec-0.5.tar.gz && cd ./luasec-luasec-0.5/src
+lua options.lua -g `locate ssl.h | grep -v kssl` > options.h
+
+# luaposix, вариант "в лоб" не работает на 2014.07.16 (собирается, но при require('ssl') валится на copyright)
 luarocks install luasec OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu
-cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install luaposix && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
+luarocks install luaposix
+
+# luaposix, вариант "ручками" (рабочий)
+cd /tmp && wget http://github.com/luaposix/luaposix/archive/release-v32.zip && unzip ./release-v32.zip && cd ./luaposix-release-v32 && luarocks make ./luaposix-32-1.rockspec
+
+cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
 luarocks install luafilesystem
 
 # ставим luajit
