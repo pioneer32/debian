@@ -24,7 +24,7 @@ echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmo
 
 npm install -g hiredis redis
 npm install -g mysql express http escape-html amqp nodemailer request
-
+npm install -g dateformat
 
 # websocket - нужно )
 npm install -g ws
