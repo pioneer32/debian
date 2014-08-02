@@ -38,6 +38,10 @@ ln -s /usr/local/lib/lua/5.1/ossp-uuid.so /usr/local/lib/lua/5.1/uuid.so
 # проверим
 lua ./test.lua
 
+# ставим time (работает только с JIT, позволяет оперировать временем в микросекундах)
+TODO
+
+
 # json support
 # самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
 luarocks install lua-cjson

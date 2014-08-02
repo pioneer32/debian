@@ -30,7 +30,7 @@ npm install -g mysql express http escape-html amqp nodemailer request
 npm install -g ws
 
 # express 3->4 развалился... его части
-npm install -g cookie body-parser amqp querystring
+npm install -g cookie body-parser querystring
 
 # Socket.IO (если нужно)
 npm -g install socket.io
