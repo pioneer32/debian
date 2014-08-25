@@ -24,13 +24,13 @@ echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmo
 
 npm install -g hiredis redis
 npm install -g mysql express http escape-html amqp nodemailer request
-
+npm install -g dateformat
 
 # websocket - нужно )
 npm install -g ws
 
 # express 3->4 развалился... его части
-npm install -g cookie body-parser amqp querystring
+npm install -g cookie body-parser querystring
 
 # Socket.IO (если нужно)
 npm -g install socket.io
