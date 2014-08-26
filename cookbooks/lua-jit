@@ -61,3 +61,7 @@ apt-get install libmagickwand-dev
 luarocks install --server=http://rocks.moonscript.org magick
 # вариант II (основной)
 wget -O /usr/local/lib/lua/magick.lua https://raw.githubusercontent.com/leafo/magick/master/magick/init.lua
+
+
+# mysql
+luarocks install luasql-mysql MYSQL_DIR=/opt/mysql/server-5.6

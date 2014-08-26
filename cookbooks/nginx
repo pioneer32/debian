@@ -35,7 +35,7 @@ wget -O ./nginx-modules/nginx-upload-module/ngx_http_upload_module.c https://gis
 
 # если нужен nginx_http_lua (если в составе сорцов из репы дебиана не пришел этот модуль, начиная с 1.4.3-3 он приходит то надо, а с 1.4.5 перестал ) )
 wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz && tar xvf ./ngx_devel_kit.tar.gz -C ./nginx-modules/ \
-&& wget -O ./lua_nginx_module.tar.gz https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.4.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
+&& wget -O ./lua_nginx_module.tar.gz https://github.com/openresty/lua-nginx-module/archive/v0.9.11.tar.gz && tar xvf ./lua_nginx_module.tar.gz -C ./nginx-modules/
 
 # если есть luajit >>>
 export LUAJIT_LIB=/usr/local/lib && export LUAJIT_INC=/usr/local/include/luajit-2.0
