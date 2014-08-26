@@ -62,3 +62,6 @@ telnet 127.0.0.1 11211
 
 # ставим mysqltuner
 apt-get install --no-install-recommends mysqltuner
+
+# и mytop
+apt-get install mytop

@@ -11,7 +11,7 @@ sudo dpkg -i node_*
 # вариант 2 (основной)
 make && make install
 
-# поставим npm
+# поставим npm (по сути не нужно начиная с node-v0.10.31)
 cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
 # npm -g install connect
 # -g - для глобальной установки пакетов
