@@ -1,0 +1,10 @@
+# упаковать папку
+# важный момент, что создаваемый архив должен быть за пределами сжимаемой папки, иначе вывалимся )
+tar -cvzf archive.tar.gz dir
+# либо bzip2
+tar -cvjf archive.tar.gz dir
+
+# распаковать папку
+tar -xvzf archive.tar.gz
+# либо bzip2
+tar -xvjf archive.tar.gz
