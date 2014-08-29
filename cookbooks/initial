@@ -54,7 +54,7 @@ reboot
 dpkg-reconfigure locales
 dpkg-reconfigure tzdata
 
-apt-get install ntp ntpdate mc dpkg-dev build-essential fakeroot debhelper sysstat atop htop iotop debsums dnsutils hdparm sysstat
+apt-get install ntp ntpdate mc dpkg-dev build-essential fakeroot debhelper sysstat atop htop iotop debsums dnsutils hdparm sysstat locate
 
 ntpdate -bs ru.pool.ntp.org
 # проверил ps aux | grep ntp
