@@ -38,21 +38,16 @@ ln -s /usr/local/lib/lua/5.1/ossp-uuid.so /usr/local/lib/lua/5.1/uuid.so
 # проверим
 lua ./test.lua
 
+
+ln -s /usr/local/lib/lua/resty /usr/local/lib/lua/5.1/resty
+
 # ставим time (работает только с JIT, позволяет оперировать временем в микросекундах)
 TODO
 
-
 # json support
+# для работы из cli
 # самая быстрая это lua-cjson, но с ней есть баг: cjson.encode( cjson.decode '[]' ) возвращает '{}'
 luarocks install lua-cjson
-# лечим выше укзанный баг установкой https://github.com/bungle/lua-resty-cjson
-# Важно! работает только с LuaJIT
-cd /tmp && git clone https://github.com/bungle/lua-resty-cjson.git && cd lua-resty-cjson
-# http://sourceforge.net/projects/cjson/files/latest/download
-wget -O cJSONFiles.zip http://downloads.sourceforge.net/project/cjson/cJSONFiles.zip?r=&ts=1401879441&use_mirror=softlayer-ams
-unzip ./cJSONFiles.zip && cd ./cJSON && gcc cJSON.c -o cjson.so -shared -fPIC && mkdir -p /usr/local/lib/lua/resty && cp ./cjson.so /usr/local/lib/lua/resty/cjson.so
-cd ../lib/resty/ && sed -e "s/\(ffi_load([\s\"']*\)cjson\([\s\"']*)\)/\1\/usr\/local\/lib\/lua\/resty\/cjson\.so\2/" -i ./cjson.lua
-cp ./cjson.lua /usr/local/lib/lua/resty/cjson.lua
 
 # magick support
 apt-get install libmagickwand-dev
