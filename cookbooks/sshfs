@@ -1,0 +1,3 @@
+apt-get install sshfs
+mkdir /mnt/dir
+sshfs -p port username@server:/home/user/folder /mnt/dir -o uid=1000,gid=1000
