@@ -22,6 +22,7 @@ chown -R root:root /opt/mysql && chown -R mysql:mysql /opt/mysql/server-5.6
 cd /usr/local && ln -s /opt/mysql/server-5.6 mysql && cd mysql
 
 # если установка чистая >
+mkdir /etc/mysql
 curl -L https://raw.githubusercontent.com/pioneer32/debian/b9063f65c44c80009a4c8859dfcc36d1416c5d50/misc/mysql56.cnf > /etc/mysql/my.cnf
 
 # перед следующим шагом важно чтобы /etc/mysql/my.cnf содержал правильные настройки размеров лог-файлов и innodb_file_per_table
@@ -42,7 +43,7 @@ install -o mysql -g mysql -d /usr/share/mysql && \
 ln -sf /usr/local/mysql/share/english/errmsg.sys /usr/share/mysql/errmsg.sys
 
 # вариант 1 (интерактивный)
-mysql_secure_installation
+service mysql start && mysql_secure_installation
 
 # вариант 2 (не законченый, пока только пароль руту назначаю)
 service mysql restart --skip-grant-tables && \
