@@ -18,6 +18,9 @@ update-grub
 
 apt-get install curl bash-completion
 
+# выключаем ежедневное обновление updatedb.mlocate
+mv /etc/cron.daily/mlocate /etc/cron.daily/mlocate.disabled
+
 # TODO сделать патч:
 # /etc/bash.bashrc, раскомментировать
 ## enable bash completion in interactive shells
