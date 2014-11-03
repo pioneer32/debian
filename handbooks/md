@@ -1,0 +1,42 @@
+# copy partition table from sda to sdb
+sfdisk -d /dev/sda | sfdisk /dev/sdb
+
+# saving partition table to somefile
+sfdisk -d /dev/sda > /somefile
+
+# view summary state of all RAID devices
+cat /proc/mdstat
+
+# view detailed state of RAID device
+mdadm -D /dev/md0
+
+# force RAID device md0 to resync
+echo check > /sys/class/block/md0/md/sync_action
+
+# if RAID device md0 in resync=PENDING
+echo idle > /sys/class/block/md0/md/sync_action
+
+# creating RAID device (RAID 1, 3 devices)
+mdadm -C /dev/md0 --metadata=1.2 --level=1 --raid-devices=3 /dev/sda1 /dev/sdb1 /dev/sdc1
+mdadm --assemble /dev/md0 /dev/sda1 /dev/sdb1 /dev/sdc1
+
+# adding device to RAID device md0
+mdadm /dev/md0 -a /dev/sdc1
+
+# mark device sdc1 in RAID device md0 as "faulty" (this mean)
+mdadm /dev/md0 --set-faulty /dev/sdc1
+# or
+mdadm /dev/md0 --fail /dev/sdc1
+
+# remove device from RAID device
+mdadm /dev/md0 --remove /dev/sdc1
+
+# stopping a running RAID device
+mdadm --stop /dev/md0
+
+# starting RAID device (work if record fro md0 exist in mdadm.conf or if after creating md0 assemble was called)
+mdadm --run /dev/md0
+
+
+# TODO
+mdadm --assemble --scan

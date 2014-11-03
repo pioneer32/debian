@@ -1,3 +1,26 @@
+# акутальный вариант сборки! since 2014-10-05
+mkdir -p /tmp/mysql56 && cd /tmp/mysql56
+wget http://dev.mysql.com/get/mysql-apt-config_0.2.1-1debian7_all.deb
+dpkg -i mysql-apt-config_0.2.1-1debian7_all.deb
+apt-get update
+apt-get install mysql-server libmysqlclient18 libmysqlclient-dev
+echo -e "[client]\nuser = root\npassword = " > ~/.my.cnf && nano ~/.my.cnf
+
+# включаем memcached plugin
+mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS test; DROP TABLE IF EXISTS test.demo_test;" \
+&& mysql < /usr/share/mysql/innodb_memcached_config.sql \
+&& mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;" | grep memcached
+# для теста
+telnet 127.0.0.1 11211
+# далее get @@aaa.AA
+# должны получить "HELLO, HELLO"
+
+
+
+
+
+
+
 # начиная с версии 5.6.17 появилась в репе wheezy
 apt-get install mysql-server-5.6 mysql-client-5.6
 
@@ -55,7 +78,7 @@ ln -sf /opt/mysql/server-5.6/lib/* /usr/lib/
 
 # включаем memcached plugin
 mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS test; DROP TABLE IF EXISTS test.demo_test;" \
-&& mysql < /opt/mysql/server-5.6/share/innodb_memcached_config.sql \
+&& mysql < /usr/share/mysql/innodb_memcached_config.sql \
 && mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;" | grep memcached
 # для теста
 telnet 127.0.0.1 11211
@@ -65,4 +88,4 @@ telnet 127.0.0.1 11211
 apt-get install --no-install-recommends mysqltuner
 
 # и mytop
-apt-get install mytop
+apt-get install --no-install-recommends mytop

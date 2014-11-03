@@ -1,37 +1,24 @@
-apt-get update
-apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
+apt-get update && apt-get install lua5.1 liblua5.1-0 liblua5.1-0-dev luarocks libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make
 
-cd /tmp && wget https://github.com/brunoos/luasec/archive/luasec-0.5.tar.gz && tar -xvf ./luasec-0.5.tar.gz && cd ./luasec-luasec-0.5/src
-lua options.lua -g `locate ssl.h | grep -v kssl` > options.h
+cd /tmp && wget https://github.com/brunoos/luasec/archive/luasec-0.5.tar.gz && tar -xvf ./luasec-0.5.tar.gz && cd ./luasec-luasec-0.5/src \
+&& lua options.lua -g `locate ssl.h | grep -v kssl` > options.h
 
 # luaposix, вариант "в лоб" не работает на 2014.07.16 (собирается, но при require('ssl') валится на copyright)
-luarocks install luasec OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu
-luarocks install luaposix
+luarocks install luasec OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu && luarocks install luaposix
 
 # luaposix, вариант "ручками" (рабочий)
 cd /tmp && wget http://github.com/luaposix/luaposix/archive/release-v32.zip && unzip ./release-v32.zip && cd ./luaposix-release-v32 && luarocks make ./luaposix-32-1.rockspec
 
-cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu
-luarocks install luafilesystem
+cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu && luarocks install luafilesystem
 
 # ставим luajit
-cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz
-cd ./LuaJIT-2.0.2 && make && make install
-
-# ??? один раз пришлость ставить -sf
-ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
+cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz && cd ./LuaJIT-2.0.2 && make && make install \
+&& ln -sf /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/lib/liblua.so
 
 # ставим ossp-uuid
 cd /tmp && apt-get remove --purge libossp-uuid-dev && apt-get autoremove
-
-wget ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
-# иногда есть трудности с пассивным режимом... тогда:
-wget --no-passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
-# либо
-wget --passive-ftp ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
-
-tar -xvf ./uuid-1.6.2.tar.gz && cd ./uuid-1.6.2 && ./configure && make && make install
-ldconfig
+URL=ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz; wget $URL || wget --no-passive-ftp $URL || wget --passive-ftp $URL
+tar -xvf ./uuid-1.6.2.tar.gz && cd ./uuid-1.6.2 && ./configure && make && make install && ldconfig
 cd /tmp && git clone https://github.com/mah0x211/lua-ossp-uuid.git && cd ./lua-ossp-uuid
 luarocks make ./ossp-uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUID_LIBDIR=/usr/local/lib
 ln -s /usr/local/lib/lua/5.1/ossp-uuid.so /usr/local/lib/lua/5.1/uuid.so
@@ -59,4 +46,6 @@ wget -O /usr/local/lib/lua/magick.lua https://raw.githubusercontent.com/leafo/ma
 
 
 # mysql
-luarocks install luasql-mysql MYSQL_DIR=/opt/mysql/server-5.6
+# luarocks install luasql-mysql MYSQL_DIR=/opt/mysql/server-5.6
+luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql
+

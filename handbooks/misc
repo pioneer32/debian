@@ -1,3 +1,5 @@
 # создать пустой большой файл размером 1G (для 10Gb нужно использовать seek=10240)
 dd if=/dev/zero of=./bigfile count=1 bs=1024k seek=1024
 
+# автоподъем сетевого интерфейса (спасло один раз, когда сетевуха веселая)
+echo -e "\n# auto eth0 up every 5 minutes\n*/5 * * * * root ifup eth0 > /dev/null 2>&1\n\n" >> /etc/crontab

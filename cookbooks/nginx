@@ -1,3 +1,5 @@
+# F*CK не работает.... бля переписали ./nginx-1.*/debian/rules надо обновиться (
+
 echo -e "# official nginx repo\ndeb http://nginx.org/packages/debian/ wheezy nginx\ndeb-src http://nginx.org/packages/debian/ wheezy nginx" > /etc/apt/sources.list.d/nginx.sources.list
 wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
 apt-get update && apt-get dist-upgrade
@@ -41,7 +43,6 @@ wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0
 export LUAJIT_LIB=/usr/local/lib && export LUAJIT_INC=/usr/local/include/luajit-2.0
 
 # тут в конфиг автоматически добавляются ВСЕ модули найденные в /tmp/nginx-modules, а ненужные удаляются
-# если нужен дебаг, то его нужно принудительно прописать руками --with-debug (т.к. debug пакет в итоге не ставится)
 a=`ls ./nginx-1.*/debian/rules` && \
 cp $a "$a.bak" && \
 am=`n=0;ls -1 ./nginx-modules/ | while read m; do if [ $n -ge 1 ]; then echo -n " \\\\\\\\\n"; fi; echo -n "\1--add-module=\/tmp\/nginx-modules\/$m"; n=1; done;` && \
@@ -51,6 +52,10 @@ sed -e "s/^\([ \t]*\)--with-ipv6$/$am/" -i $a && \
 sed -e 's/^\([ \t]*\)dh_shlibdeps -a/\1dpkg-shlibdeps -a --dpkg-shlibdeps-params=--ignore-missing-info/' -i $a && \
 echo -e "override_dh_shlibdeps:\n        dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info\n" >> $a
 echo -e "override_dh_shlibdeps:\n        dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info\n" >> $a
+
+# если нужен дебаг, то его нужно принудительно прописать руками --with-debug (т.к. debug пакет в итоге не ставится)
+nano ./nginx-1.*/debian/rules
+
 
 # для luajit, если вывалится по dpkg-shlibdeps: error: no dependency information found for /usr/local/lib/libluajit-5.1.so.2 (used by debian/nginx-full/usr/sbin/nginx)
 # надо строку 'dpkg-shlibdeps -a' заменить на 'dpkg-shlibdeps -a --dpkg-shlibdeps-params=--ignore-missing-info'
