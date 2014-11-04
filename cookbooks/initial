@@ -17,6 +17,9 @@ echo 'GRUB_CMDLINE_LINUX="ipv6.disable=1"' >> /etc/default/grub
 update-grub
 # если все ок, то reboot
 
+# выключаем ежедневное обновление updatedb.mlocate
+mv /etc/cron.daily/mlocate /etc/cron.daily/mlocate.disabled
+
 # TODO сделать патч:
 # /etc/bash.bashrc, раскомментировать
 ## enable bash completion in interactive shells
