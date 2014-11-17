@@ -1,4 +1,5 @@
 # акутальный вариант сборки! since 2014-10-05
+
 mkdir -p /tmp/mysql56 && cd /tmp/mysql56
 wget http://dev.mysql.com/get/mysql-apt-config_0.2.1-1debian7_all.deb
 dpkg -i mysql-apt-config_0.2.1-1debian7_all.deb
@@ -16,21 +17,10 @@ telnet 127.0.0.1 11211
 # должны получить "HELLO, HELLO"
 
 
-
-
-
-
-
 # начиная с версии 5.6.17 появилась в репе wheezy
+
 apt-get install mysql-server-5.6 mysql-client-5.6
-
 # !!! но в пакете который приходит с dotdeb нет memcached plugin (
-# включаем memcached plugin
-mysql -e "CREATE DATABASE IF NOT EXISTS test" && mysql < /usr/share/mysql/innodb_memcached_config.sql
-mysql -e "INSTALL PLUGIN daemon_memcached SONAME 'libmemcached.so';show plugins;"
-
-# в /root/.my.cnf надо прописть пароль рута
-
 
 
 # ) но можно собирать и так:
