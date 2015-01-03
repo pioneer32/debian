@@ -1,14 +1,18 @@
 apt-get update && apt-get dist-upgrade
+
+# since 30.12.14 рабочий вариант с nodesource (nodejs+npm):
+# вырезка из curl -sL https://deb.nodesource.com/setup | bash - && apt-get install nodejs
+apt-get install build-essential curl apt-transport-https lsb-release
+# curl -sLf -o /dev/null https://deb.nodesource.com/node/dists/wheezy/Release
+curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+echo -e "deb https://deb.nodesource.com/node wheezy main\ndeb-src https://deb.nodesource.com/node wheezy main" > /etc/apt/sources.list.d/nodesource.list
+apt-get update && apt-get install nodejs
+
+# вариант сборки из исходников:
 apt-get install python g++ make libssl-dev checkinstall
 cd /tmp && mkdir -p ./nodejs && cd $_
 wget http://nodejs.org/dist/node-latest.tar.gz && tar -xzvf node-latest.tar.gz && cd node-v*
 ./configure
-
-# вариант 1, надо в версии (3) в диалоге заменить версию, убрать v (пример v0.10 -> 0.10)
-checkinstall
-sudo dpkg -i node_*
-
-# вариант 2 (основной)
 make && make install
 
 # поставим npm (по сути не нужно начиная с node-v0.10.31)
@@ -22,20 +26,18 @@ cd /tmp/nodejs && wget https://npmjs.org/install.sh && sh ./install.sh
 echo -e 'export NODE_PATH="'$(npm root -g)'"\n' > /etc/profile.d/node.sh && chmod +x /etc/profile.d/node.sh && . /etc/profile.d/node.sh
 # но надо запускать от пользователя от которого будет работать нода
 
+# по правильному все надо писать в package.json и расскатывать в локальный node_modules
+# но если нужны глобально то:
 npm install -g hiredis redis
 npm install -g mysql express http escape-html amqp nodemailer request
 npm install -g dateformat
-
 # websocket - нужно )
 npm install -g ws
-
 # express 3->4 развалился... его части
 npm install -g cookie body-parser querystring
-
 # Socket.IO (если нужно)
 npm -g install socket.io
-
-# демонизация модуль forever (нужно)
+# демонизация модуль forever (пока отказался от него в пользу libslack/daemon)
 npm install -g forever
 # forever start app.js
 # forever stop app.js
