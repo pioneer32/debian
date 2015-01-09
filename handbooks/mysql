@@ -1,3 +1,6 @@
 # посмотреть сколько записей во всех таблицах бд
 db=*dbname*; mysql $db -E -e "SHOW TABLES" | grep -v -F '*' | cut -d ' ' -f 2 | while read tn; do echo "$tn: `mysql $db -E -e "SELECT COUNT(*) FROM $tn" | grep -v -F '**' | cut -f 2 -d ' '`"; done
 
+# dump db scheme only (without data)
+mysqldump --add-drop-database --add-drop-table --triggers --no-data --routines [--all-databases|--databases db_name ... |db_name [--tables table_name ...] ]
+mysqldump --add-drop-database --add-drop-table --triggers --no-data --routines autospa_api

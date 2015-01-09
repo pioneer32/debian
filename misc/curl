@@ -1,0 +1,3 @@
+# dump request timing
+echo "\n   namelookup:  %{time_namelookup}\n      connect:  %{time_connect}\n   appconnect:  %{time_appconnect}\n  pretransfer:  %{time_pretransfer}\ntime_redirect:  %{time_redirect}\nstarttransfer:  %{time_starttransfer}\n              ----------\n        total:  %{time_total}\n\n" > /tmp/req_format
+curl -w"@/tmp/req_format" -s https://google.com/
