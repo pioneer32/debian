@@ -20,6 +20,7 @@ cd /tmp && apt-get remove --purge libossp-uuid-dev && apt-get autoremove
 URL=ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz; wget $URL || wget --no-passive-ftp $URL || wget --passive-ftp $URL
 tar -xvf ./uuid-1.6.2.tar.gz && cd ./uuid-1.6.2 && ./configure && make && make install && ldconfig
 cd /tmp && git clone https://github.com/mah0x211/lua-ossp-uuid.git && cd ./lua-ossp-uuid
+mkdir /usr/local/include/ossp/ && cp /usr/local/include/uuid.h /usr/local/include/ossp/
 luarocks make ./ossp-uuid-1.0-0.rockspec OSSP_UUID_INCDIR=/usr/local/include OSSP_UUID_LIBDIR=/usr/local/lib
 ln -s /usr/local/lib/lua/5.1/ossp-uuid.so /usr/local/lib/lua/5.1/uuid.so
 # проверим
