@@ -31,6 +31,7 @@ autoreconf -i
 rabbitmq-plugins enable rabbitmq_management
 service rabbitmq-server restart
 cd /tmp && wget http://localhost:15672/cli/rabbitmqadmin && mv ./rabbitmqadmin /usr/sbin/rabbitmqadmin && chmod +x /usr/sbin/rabbitmqadmin
+rabbitmqadmin --bash-completion > /etc/bash_completion.d/rabbitmqadmin
 
 # создаем пользователя которому можно ходить в :15672
 rabbitmqctl add_user administrator PASSWORD
@@ -45,6 +46,9 @@ rabbitmq-plugins enable rabbitmq_stomp
 echo -e '[\n\t{rabbitmq_stomp, [{tcp_listeners, [61613]}]}\n].\n' > /etc/rabbitmq/rabbitmq.config
 service rabbitmq-server restart
 
+# пример создания vhost, пользователя и задача полных прав пользователю на данный vhost
+VHOST='/test1' && USER='test' && PASS='pass' && \
+rabbitmqctl add_vhost $VHOST && rabbitmqctl add_user $USER $PASS && rabbitmqctl set_permissions -p $VHOST $USER ".*" ".*" ".*"
 
 # пример поднятия федерации:
 # на upstream (с кого будут забирать):

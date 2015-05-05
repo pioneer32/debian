@@ -6,3 +6,6 @@ echo -e "\n# auto eth0 up every 5 minutes\n*/5 * * * * root ifup eth0 > /dev/nul
 
 # all files in current dir from CRLF to LF
 find . -type f -name "*" | while read f; do sed $'s/\r$//' -i $f; done
+
+
+| RE="(dm=)"; while read LINE; do [[ $LINE =~ $RE ]]; echo "${BASH_REMATCH[1]}"; done

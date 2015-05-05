@@ -19,10 +19,20 @@ PIDFILE="${NODE_APP_ROOTDIR}/${NODE_APP_NAME}.pid"
 # NODE_PATH="/usr/local/lib/node_modules"
 . /etc/profile.d/node.sh
 
+# The full path to the directory containing the node and forever binaries.
+NODE_BIN_DIR="/usr/local/bin"
+# And add node to the path for situations in which the environment is passed.
+export PATH=$NODE_BIN_DIR:$PATH
 
-export PATH=$PATH:/usr/local/bin
+# Set the NODE_PATH to the Node.js main node_modules directory.
+# It is usually NODE_PATH="/usr/local/lib/node_modules"
 export NODE_PATH=$NODE_PATH
+
 export HOME=/root
+
+# Forever settings to prevent the application spinning if it fails on launch.
+MIN_UPTIME="5000"
+SPIN_SLEEP_TIME="2000"
 
 case $1 in
 	start)
@@ -30,8 +40,10 @@ case $1 in
 		forever \
 			--no-colors \
 			--pidFile $PIDFILE \
-			--append \
+			-a \
 			-l ${NODE_APP_LOGFILE} \
+			--minUptime $MIN_UPTIME \
+      		--spinSleepTime $SPIN_SLEEP_TIME \
 			--debug \
 			start $APPLICATION_PATH 2>&1 >> ${NODE_APP_LOGFILE} &
 		RETVAL=$?

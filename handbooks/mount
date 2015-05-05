@@ -1,0 +1,2 @@
+# This simple command causes all filesystems mentioned in /etc/fstab to be remounted, except the partitions with noauto option
+mount -a

@@ -1,0 +1,2 @@
+# to skip 100 first lines
+tail -n+100 <filename>

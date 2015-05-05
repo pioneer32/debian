@@ -2,5 +2,10 @@
 db=*dbname*; mysql $db -E -e "SHOW TABLES" | grep -v -F '*' | cut -d ' ' -f 2 | while read tn; do echo "$tn: `mysql $db -E -e "SELECT COUNT(*) FROM $tn" | grep -v -F '**' | cut -f 2 -d ' '`"; done
 
 # dump db scheme only (without data)
-mysqldump --add-drop-database --add-drop-table --triggers --no-data --routines [--all-databases|--databases db_name ... |db_name [--tables table_name ...] ]
-mysqldump --add-drop-database --add-drop-table --triggers --no-data --routines autospa_api
+mysqldump --add-drop-database --add-drop-table --triggers --no-data --routines --events [--all-databases|--databases db_name ... |db_name [--tables table_name ...] ]
+
+# dump db data only (without scheme, triggers and routines)
+mysqldump --no-create-info --no-create-db --skip-triggers [--all-databases|--databases db_name ... |db_name [--tables table_name ...] ]
+
+# dump data only from some table with condition
+mysqldump --no-create-info --no-create-db --skip-triggers db_name --tables table_name --where="1 limit 1000000"

@@ -1,0 +1,8 @@
+# Sorted list of proccesses with memory usage in Mb
+ps -eo size,pid,user,command --sort -size | awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }'
+
+# Список из 30 процессов, которые больше всего нагружают процессор
+ps aux --sort=-%cpu | head -31
+
+# Топ прожорливых к памяти процессов
+ps aux --sort=-rssize | head -31

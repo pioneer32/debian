@@ -42,6 +42,12 @@ wget -O ./ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0
 # если есть luajit >>>
 export LUAJIT_LIB=/usr/local/lib && export LUAJIT_INC=/usr/local/include/luajit-2.0
 
+
+## А в линуксе это транслируется в apt-get install или ./configure make make install? А как написать кастомную сборку nginx? Например, с модулем mod_zip и module_image_filter? В консоли я это делаю обычно так:
+## ./configure --with-http_secure_link_module --with-http_image_filter_module --with-http_dav_module --with-http_ssl_module --prefix=/etc/nginx --sbin-path=/usr/local/sbin --add-module=/tmp/zip
+## make
+## make install
+
 # тут в конфиг автоматически добавляются ВСЕ модули найденные в /tmp/nginx-modules, а ненужные удаляются
 a=`ls ./nginx-1.*/debian/rules` && \
 cp $a "$a.bak" && \

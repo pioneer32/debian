@@ -17,6 +17,9 @@ mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS
 
 # ставим mysqltuner & mytop
 apt-get install mysqltuner mytop
+# Если будет ошибка: "my" variable $up_width masks earlier declaration in same scope at /usr/bin/mytop line 864.
+# то
+
 
 
 # но можно собирать и из исходников:
