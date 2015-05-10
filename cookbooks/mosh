@@ -1,0 +1,20 @@
+# mosh is MObile SHell
+
+# install
+apt-get install mosh
+
+# client install on mac
+brew update && brew install mobile-shell
+
+# on server:
+mosh-server
+
+# iptables tune up on server
+iptables -A INPUT -p udp -m multiport --dports 60000:61000 -j ACCEPT
+
+# on client
+mosh username@example.com
+# if ssh port if different:
+mosh user@example.com --ssh="ssh -p 2222"
+
+# enjoy )
