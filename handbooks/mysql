@@ -9,3 +9,12 @@ mysqldump --no-create-info --no-create-db --skip-triggers [--all-databases|--dat
 
 # dump data only from some table with condition
 mysqldump --no-create-info --no-create-db --skip-triggers db_name --tables table_name --where="1 limit 1000000"
+
+USER_ID='ac63d714-6cc9-7973-d005-950c42e7dade'; SQL_FILE="dump-$USER_ID.$(date +%Y-%m-%d).sql"; \
+echo -e "USE \`simplanum_node\`;\n\n" > $SQL_FILE && \
+mysqldump --add-drop-database --add-drop-table --triggers --no-data --routines --events simplanum_node >> $SQL_FILE && \
+mysqldump --no-create-info --no-create-db --skip-triggers simplanum_node --tables attachments --where="ownerID='$USER_ID'" >> $SQL_FILE && \
+mysqldump --no-create-info --no-create-db --skip-triggers simplanum_node --tables entities --where="ownerID='$USER_ID'" >> $SQL_FILE && \
+mysqldump --no-create-info --no-create-db --skip-triggers simplanum_node --tables g_users --where="ID='$USER_ID'" >> $SQL_FILE
+
+
