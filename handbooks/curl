@@ -1,0 +1,36 @@
+# Will get the content of the URL and put it in the STDOUT
+curl http://www.example.org
+
+# Will get the content of the URL and save it to file somefile.txt
+curl -o somefile.txt http://www.example.org/somefile.txt
+
+# Will get the content of the URL and save it to file (the filename in the URL will be taken)
+curl -O http://www.example.org/somefile.txt
+
+# Fetch Multiple Files at a time
+curl -O URL1 -O URL2
+
+# Allow CURL to follow HTTP Location Headers (by default CURL doesn’t follow the HTTP Location headers)
+curl -L http://www.example.org
+
+# Using curl "-C -" option, you can continue a download which was stopped already for some reason.
+# Example usage:
+# Start a big download using curl, and press Ctrl-C to stop it in between the download:
+curl -O http://www.example.org/hugefile.zip
+# Now the download will continue from break point (if server support HTTP Range):
+curl -C - -O http://www.example.org/hugefile.zip
+
+# Limit the Rate of Data Transfer (on an average, it will come around to 1000B/second)
+curl --limit-rate 1000B -O http://www.example.org/hugefile.zip
+
+# Pass HTTP Authentication in cURL
+# Note: By default curl uses Basic HTTP Authentication. We can specify other authentication method using –ntlm | –digest.
+curl -u username:password URL
+
+# Download Files from FTP server
+curl -u ftpuser:ftppass -O ftp://ftp.example.org/hugefile.zip
+
+# Use Proxy
+curl -x proxyserver:3128 http://www.example.org
+
+
