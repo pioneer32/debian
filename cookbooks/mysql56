@@ -15,11 +15,17 @@ mysql -e "DROP DATABASE IF EXISTS innodb_memcache; CREATE DATABASE IF NOT EXISTS
 ( sleep 0.5; echo "get @@aaa.AA"; echo "quit" ) | nc 127.0.0.1 11211 | grep HELLO
 # должны получить "HELLO, HELLO"
 
-# ставим mysqltuner & mytop
-apt-get install mysqltuner mytop
-# Если будет ошибка: "my" variable $up_width masks earlier declaration in same scope at /usr/bin/mytop line 864.
-# то
+# ставим mysqltuner
+apt-get install mysqltuner
 
+# ставим mytop
+#
+# вариант из репозитария
+apt-get install mytop
+# если нужна сама последняя версия
+git clone https://github.com/jzawodn/mytop.git && cd ./mytop && perl Makefile.PL && make && make test && make install
+# если будет ошибка: Can't call method "Parameters" on an undefined value at /usr/bin/mytop line 136
+# то надо удалить из ~/.my.cnf параметры вида 'show-warnings', 'auto-rehash' или 'sigint-ignore' (perl ini поперхивается на параметрах отличных от вида a=b)
 
 
 # но можно собирать и из исходников:
