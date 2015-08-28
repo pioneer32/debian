@@ -1,3 +1,17 @@
 # dump request timing
 echo "\n   namelookup:  %{time_namelookup}\n      connect:  %{time_connect}\n   appconnect:  %{time_appconnect}\n  pretransfer:  %{time_pretransfer}\ntime_redirect:  %{time_redirect}\nstarttransfer:  %{time_starttransfer}\n              ----------\n        total:  %{time_total}\n\n" > /tmp/req_format
 curl -w"@/tmp/req_format" -s https://google.com/
+
+# dump raw response (with headers)
+curl -D - https://google.com/
+
+# dump raw response (headers only)
+curl -D - -s -o /dev/null https://google.com/
+
+# dump raw response (headers only)
+curl -D - -s -o /dev/null --header 'accept-encoding: gzip, deflate, sdch' https://google.com/
+curl -D - -s -o /dev/null --header 'accept-encoding: gzip, deflate, sdch' http://localhost/v2.1.0-dev/js/bundle.js.map
+curl -D - -s -o /dev/null --header 'accept-encoding: gzip, deflate, sdch' http://web-dev.bossnote.ru/css/styles.css
+
+# POST some JSON data
+curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password":"xyz"}' http://localhost:3000/api/login

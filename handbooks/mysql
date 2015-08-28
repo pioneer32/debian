@@ -18,3 +18,11 @@ mysqldump --no-create-info --no-create-db --skip-triggers simplanum_node --table
 mysqldump --no-create-info --no-create-db --skip-triggers simplanum_node --tables g_users --where="ID='$USER_ID'" >> $SQL_FILE
 
 
+mysqldump --add-drop-database --add-drop-table --triggers --routines --events --databases autospa_api
+
+
+# получить 10 самых частых медленных запросов в файл top10-by-count.log:
+mysqldumpslow -s c -t 10 /var/log/mysql/mysql-slow.log > top10-by-count.log
+
+mysqldumpslow -s c -t 10 /var/log/mysql/mysql-slow.log > top10-by-count.log
+
