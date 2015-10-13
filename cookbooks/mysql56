@@ -1,8 +1,8 @@
-# акутальный вариант сборки! since 2014-10-05
+# актуальный вариант сборки! since 2014-10-05
 
 mkdir -p /tmp/mysql56 && cd /tmp/mysql56
-wget http://dev.mysql.com/get/mysql-apt-config_0.2.1-1debian7_all.deb
-dpkg -i mysql-apt-config_0.2.1-1debian7_all.deb
+wget http://dev.mysql.com/get/mysql-apt-config_0.3.7-1debian7_all.deb
+dpkg -i mysql-apt-config_0.3.7-1debian7_all.deb
 apt-get update
 apt-get install mysql-server libmysqlclient18 libmysqlclient-dev
 echo -e "[mysql]\nauto-rehash\n\n[client]\nuser = root\npassword = " > ~/.my.cnf && nano ~/.my.cnf
