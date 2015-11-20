@@ -9,7 +9,7 @@ luarocks install luasec OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu && luarocks ins
 # luaposix, вариант "ручками" (рабочий)
 cd /tmp && wget http://github.com/luaposix/luaposix/archive/release-v32.zip && unzip ./release-v32.zip && cd ./luaposix-release-v32 && luarocks make ./luaposix-32-1.rockspec
 
-cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install lrexlib-pcre PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu && luarocks install luafilesystem
+cd /tmp && luarocks install luasocket && luarocks install lua-hiredis && luarocks install lrexlib-pcre 2.7.2-1 PCRE_LIBDIR=/usr/lib/x86_64-linux-gnu && luarocks install luafilesystem
 
 # ставим luajit
 cd /tmp && wget http://luajit.org/download/LuaJIT-2.0.2.tar.gz && tar xvf ./LuaJIT-2.0.2.tar.gz && cd ./LuaJIT-2.0.2 && make && make install \
